@@ -1,0 +1,67 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_bodegas>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Bodegas</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Identificador</th>
+                        <th class="text-center" scope="col">Nombre</th>
+                        <th class="text-center" scope="col">Descripción</th>
+                        <th class="text-center" scope="col">Observaciones</th>
+                        <th class="text-center" scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _registro in Model.OrderByDescending(x => x.PK_codigo))
+                    {
+                        <tr>
+                            <th class="text-center" scope="row"><a href="/Bodegas/Details/@_registro.PK_codigo">@_registro.PK_codigo</a></th>
+                            <td>@_registro.identificador</td>
+                            <td>@_registro.nombre</td>
+                            <td>@_registro.descripcion</td>
+                            <td>@_registro.observaciones</td>
+                            <td>
+                                <label style="color:@_registro.estado_color"><i class="fa fa-circle"></i></label>
+                                <label>@_registro.estado</label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="~/Bodegas/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nueva</span></a>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+}
+
+
+

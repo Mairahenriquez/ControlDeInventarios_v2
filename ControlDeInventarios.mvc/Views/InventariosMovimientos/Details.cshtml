@@ -1,0 +1,253 @@
+﻿@model ControlDeInventarios.entities.vw_inventarios_movimientos
+@{
+    ViewBag.Title = "Movimientos de Inventarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _detalle = ViewBag._detalle;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Movimientos de Inventarios # @Model.PK_codigo </h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Tipo de movimiento:</label><br />
+            <label class="form-label bold">@Model.tipo_movimiento</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Bodega entrada:</label><br />
+            <label class="form-label bold">@Model.bodega</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Bodega destino:</label><br />
+            <label class="form-label bold">@Model.bodega_destino</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha:</label><br />
+            <label class="form-label bold">@Model.fecha.ToString("yyyy-MM-dd")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Referencia:</label><br />
+            <label class="form-label bold">@Model.referencia</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones: </label><br />
+            <label class="form-label bold">@Model.observaciones</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label>Estado:</label><br />
+            <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
+            <label class="form-label bold">@Model.estado</label>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#Detalle">AGREGAR PRODUCTOS</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12">
+            <div class="tab-content">
+                <!-- Tab panes Detalle -->
+                <div class="tab-pane container active" id="Detalle">
+                    <table class="table table-bordered" id="myTable_Detalle">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">Identificador</th>
+                                <th class="text-center" scope="col">Descripción</th>
+                                <th class="text-center" scope="col">Cantidad</th>
+                                <th class="text-center" scope="col">Costo unitario</th>
+                                <th class="text-center" scope="col">Costo total</th>
+                                <th class="text-center" scope="col">Precio unitario</th>
+                                <th class="text-center" scope="col">Precio total</th>
+                                @if (Model.FK_estado == 1)
+                                {
+                                    <th class="text-center" scope="col">Opciones</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _a in _detalle)
+                            {
+                                <tr>
+                                    <td>@_a.identificador</td>
+                                    <td>@_a.producto</td>
+                                    <td class="text-end">@_a.cantidad.ToString("N2")</td>
+                                    <td class="text-end">@_a.costo_unitario.ToString("C2")</td>
+                                    <td class="text-end">@_a.costo_total.ToString("C2")</td>
+                                    <td class="text-end">@_a.precio_unitario.ToString("C2")</td>
+                                    <td class="text-end">@_a.precio_total.ToString("C2")</td>
+                                    @if (Model.FK_estado == 1)
+                                    {
+                                        <td class="text-center">
+                                            <a href="/InventariosMovimientos/Delete/@_a.PK_codigo"><i class="fa-solid fa-trash-can"></i></a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="/InventariosMovimientos/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Movimientos de Inventarios</span></a>
+    <a href="~/InventariosMovimientos/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+    <a href="~/InventariosMovimientos/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Opciones
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.FK_estado == 1)
+            {
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Procesar,'¿Desea procesar el Movimiento de Inventarios?');"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>
+                <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_agregar_productos"><i class="fa-solid fa-circle-check"></i> Agregar productos</a> </li>
+            }
+        </ul>
+    </div>
+}
+
+<!-- Modal para agregar productos -->
+<div class="modal fade" id="modal_agregar_productos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content needs-validation" id="form_agregar_productos" action="javascript:AgregarProducto();" method="post" novalidate>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar productos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-12 mt-2">
+                        <label class="form-label">Producto *</label>
+                        <select id="txt_FK_inventario" name="txt_FK_inventario" class="form-control" onchange="ValidarDatos();" required></select>
+                        <div class="invalid-feedback">Requerido</div>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <label class="form-label">Cantidad *</label>
+                        <input id="txt_cantidad" name="txt_cantidad" value="1.00" class="form-control text-end" required />
+                        <div class="invalid-feedback">Requerido</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Agregar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        //Validación bootstrap.
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Detalle');
+        });
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Compras');
+        });
+
+        $("#txt_FK_inventario").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            dropdownParent: $('#modal_agregar_productos'),
+            ajax: {
+                url: "../../Select2/SelectInventariosVendible",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        //Agregar producto.
+        function AgregarProducto() {
+            var FK_inventario = document.getElementById("txt_FK_inventario").value; //le pone lo que esta en el modal.
+            var cantidad = document.getElementById("txt_cantidad").value; //le pone lo que esta en el modal.
+
+            //Carga los datos del registro a editar;
+            var value = {
+                FK_movimiento: @Model.PK_codigo,
+                FK_inventario: FK_inventario,
+                cantidad: cantidad
+            }
+
+            //Hace la peticion AJAX para guardar registro.
+            $.ajax({
+                url: '/InventariosMovimientos/Insert',
+                type: "POST",
+                data: JSON.stringify(value),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //Actualizar pagina.
+                    location.reload();
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+        //Procesar.
+        function Procesar() {
+            $.ajax({
+                type: "GET",
+                url: "../../InventariosMovimientos/Procesar?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,162 @@
+﻿@model ControlDeInventarios.entities.vw_bodegas
+@{
+    ViewBag.Title = "Bodegas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _existencias = ViewBag._existencias;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Bodegas # @Model.PK_codigo </h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Identificador:</label><br />
+            <label class="form-label bold">@Model.identificador</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Nombre:</label><br />
+            <label class="form-label bold">@Model.nombre</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Descripción:</label><br />
+            <label class="form-label bold">@Model.descripcion</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Creada por:</label><br />
+            <label class="form-label bold">@Model.usuario</label>
+        </div>
+        @*<div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Costo total: </label><br />
+            <label class="form-label bold">@Model.costo_total.ToString("C2")</label>
+        </div>*@
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones: </label><br />
+            <label class="form-label bold">@Model.observaciones</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label>Estado:</label><br />
+            <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
+            <label class="form-label bold">@Model.estado</label>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#Detalle">PRODUCTOS POR BODEGAS</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12">
+            <div class="tab-content">
+                <!-- Tab panes Detalle -->
+                <div class="tab-pane container active" id="Detalle">
+                    <table class="table table-bordered" id="myTable_Detalle">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">Identificador</th>
+                                <th class="text-center" scope="col">Descripción</th>
+                                <th class="text-center" scope="col">Existencia</th>
+                                <th class="text-center" scope="col">Costo unitario</th>
+                                <th class="text-center" scope="col">Costo total</th>
+                                <th class="text-center" scope="col">Precio unitario</th>
+                                <th class="text-center" scope="col">Precio total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _a in _existencias)
+                            {
+                                <tr>
+                                    <td>@_a.identificador</td>
+                                    <td>@_a.descripcion</td>
+                                    <td class="text-end">@_a.existencia_fisica.ToString("N2")</td>
+                                    <td class="text-end">@_a.costo_unitario.ToString("C2")</td>
+                                    <td class="text-end">@_a.costo_total.ToString("C2")</td>
+                                    <td class="text-end">@_a.precio_unitario.ToString("C2")</td>
+                                    <td class="text-end">@_a.precio_total.ToString("C2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="/Bodegas/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Bodegas</span></a>
+    <a href="~/Bodegas/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nueva</span></a>
+    <a href="~/Bodegas/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Opciones
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.FK_estado == 1)
+            {
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Desactivar,'¿Desea desactivar la Bodega?');"><i class="fa-solid fa-circle-check"></i> Desactivar</a> </li>
+            }
+            else
+            {
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Activar,'¿Desea activar la Bodegas?');"><i class="fa-solid fa-circle-check"></i> Activar</a> </li>
+            }
+        </ul>
+    </div>
+}
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable_Detalle');
+            new DataTable('#myTable_Detalle', {
+                order: [[2, 'desc']]
+            });
+        });
+
+        //Activar.
+        function Desactivar() {
+            $.ajax({
+                type: "GET",
+                url: "../../Bodegas/Desactivar?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+
+        function Activar() {
+            $.ajax({
+                type: "GET",
+                url: "../../Bodegas/Activar?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+    </script>
+}
+
+

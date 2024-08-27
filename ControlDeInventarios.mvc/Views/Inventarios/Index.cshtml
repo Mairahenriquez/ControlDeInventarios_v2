@@ -1,0 +1,67 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_inventarios>
+@{
+    ViewBag.Title = "Inventarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Inventarios</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Identificador</th>
+                        <th class="text-center" scope="col">Descripción</th>
+                        <th class="text-center" scope="col">Precio unitario</th>
+                        <th class="text-center" scope="col">Costo unitario</th>
+                        <th class="text-center" scope="col">Existencia</th>
+                        <th class="text-center" scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _inventarios in Model)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row"><a href="/Inventarios/Details/@_inventarios.PK_codigo">@_inventarios.PK_codigo</a></th>
+                            <td>@_inventarios.identificador</td>
+                            <td>@_inventarios.descripcion</td>
+                            <td class="text-end">@_inventarios.precio_unitario.ToString("C2")</td>
+                            <td class="text-end">@_inventarios.costo_unitario.ToString("C2")</td>
+                            <td class="text-end">@_inventarios.existencia_fisica.ToString("0.00")</td>
+                            <td>
+                                <label style="color:@_inventarios.estado_color"><i class="fa fa-circle"></i></label>
+                                <label>@_inventarios.estado</label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="~/Inventarios/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+}
+

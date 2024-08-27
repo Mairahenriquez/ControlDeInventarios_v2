@@ -1,0 +1,245 @@
+﻿@model ControlDeInventarios.entities.vw_proveedores_compras
+@{
+    ViewBag.Title = "Facturas de compras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _detalle = ViewBag._detalle;
+    var _movimientos = ViewBag._movimientos;
+    var _partidas = ViewBag._partidas;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Factura de compras # @Model.PK_codigo </h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Documento:</label><br />
+            <label class="form-label bold">@Model.documento</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha:</label><br />
+            <label class="form-label bold">@Model.fecha.ToString("yyyy-MM-dd")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Bodega:</label><br />
+            <label class="form-label bold">@Model.bodega</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Proveedor:</label><br />
+            <label class="form-label bold">@Model.proveedor</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Forma de pago: </label><br />
+            <label class="form-label bold">@Model.forma_pago</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Condición de pago: </label><br />
+            <label class="form-label bold">@Model.condicion_pago</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones: </label><br />
+            <label class="form-label bold">@Model.observaciones</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label>Estado:</label><br />
+            <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
+            <label class="form-label bold">@Model.estado</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Movimiento: </label><br />
+            <label class="form-label bold">@Model.FK_movimiento</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Partida contable: </label><br />
+            <label class="form-label bold">@Model.FK_partida</label>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#Detalle">DETALLE PRODUCTOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#Movimientos">MOVIMIENTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#Partidas">PARTIDAS CONTABLE</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12">
+            <div class="tab-content">
+                <!-- Tab panes Detalle -->
+                <div class="tab-pane container active" id="Detalle">
+                    <table class="table table-bordered" id="myTable_Detalle">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">Identificador</th>
+                                <th class="text-center" scope="col">Descripción</th>
+                                <th class="text-center" scope="col">Cantidad</th>
+                                <th class="text-center" scope="col">Costo unitario</th>
+                                <th class="text-center" scope="col">Subtotal</th>
+                                <th class="text-center" scope="col">Iva</th>
+                                <th class="text-center" scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _a in _detalle)
+                            {
+                                <tr>
+                                    <td>@_a.inventario_identificador</td>
+                                    <td>@_a.descripcion</td>
+                                    <td class="text-end">@_a.cantidad.ToString("N2")</td>
+                                    <td class="text-end">@_a.costo_unitario.ToString("C2")</td>
+                                    <td class="text-end">@_a.subtotal.ToString("C2")</td>
+                                    <td class="text-end">@_a.iva.ToString("C2")</td>
+                                    <td class="text-end">@_a.total.ToString("C2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Tab panes Movimientos -->
+                <div class="tab-pane container fade" id="Movimientos">
+                    <table class="table table-bordered" id="myTable_Movimientos">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">N°</th>
+                                <th class="text-center" scope="col">Fecha</th>
+                                <th class="text-center" scope="col">Referencia</th>
+                                <th class="text-center" scope="col">Bodega</th>
+                                <th class="text-center" scope="col">Estado</th>
+                                <th class="text-center" scope="col">Costo total</th>
+                                <th class="text-center" scope="col">Precio total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _b in _movimientos)
+                            {
+                            <tr>
+                                <th class="text-center" scope="row"><a href="/InventariosMovimientos/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
+                                <td class="text-end">@_b.fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@_b.referencia</td>
+                                <td>@_b.bodega</td>
+                                <td>
+                                    <label style="color:@_b.estado_color"><i class="fa fa-circle"></i></label>
+                                    <label>@_b.estado</label>
+                                <td class="text-end">@_b.costo_total.ToString("C2") </td>
+                                <td class="text-end">@_b.precio_total.ToString("C2")</td>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Tab panes Partidas -->
+                <div class="tab-pane container fade" id="Partidas">
+                    <table class="table table-bordered" id="myTable_Partidas">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">N°</th>
+                                <th class="text-center" scope="col">Fecha</th>
+                                <th class="text-center" scope="col">Concepto</th>
+                                <th class="text-center" scope="col">Cargos</th>
+                                <th class="text-center" scope="col">Abonos</th>
+                                <th class="text-center" scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _c in _partidas)
+                            {
+                            <tr>
+                                <th class="text-center" scope="row"><a href="/ContabilidadPartidas/Details/@_c.PK_codigo">@_c.PK_codigo</a></th>
+                                <td class="text-end">@_c.fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@_c.concepto</td>
+                                <td class="text-end">@_c.cargos.ToString("C2")</td>
+                                <td class="text-end">@_c.abonos.ToString("C2")</td>
+                                <td>
+                                    <label style="color:@_c.estado_color"><i class="fa fa-circle"></i></label>
+                                    <label>@_c.estado</label>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="/ProveedoresCompras/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Facturas de compras</span></a>
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Opciones
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.FK_estado == 1)
+            {
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Procesar,'¿Desea procesar la factura de compra?');"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Anular,'¿Desea anular la factura de compra?');"><i class="fa-solid fa-circle-check"></i> Anular</a> </li>
+            }
+        </ul>
+    </div>
+}
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Detalle');
+        });
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Movimientos');
+        });
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Partidas');
+        });
+
+        //Procesar.
+        function Procesar() {
+            $.ajax({
+                type: "GET",
+                url: "../../ProveedoresCompras/Procesar?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+
+        //Anular.
+        function Anular() {
+            $.ajax({
+                type: "GET",
+                url: "../../ProveedoresCompras/Anular?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+
+    </script>
+}

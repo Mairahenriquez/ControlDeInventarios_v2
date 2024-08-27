@@ -1,0 +1,185 @@
+﻿
+@{
+    ViewBag.Title = "Órdenes de compra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var FormaPago = (ControlDeInventarios.entities.formas_pagos)ViewBag.FormaPago;
+    var CondicionPago = (ControlDeInventarios.entities.condiciones_pagos)ViewBag.CondicionPago;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800"><i class="fa-solid fa-circle-plus" style="color: #6b6d76;"></i> Orden de compra</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<form class="modal-content needs-validation" method="post" novalidate>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Descripción *</label>
+            <input id="descripcion" name="descripcion" type="text" class="form-control" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha *</label>
+            <input id="fecha" name="fecha" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-end" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Bodega *</label>
+            <select id="FK_bodega" name="FK_bodega" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Proveedor *</label>
+            <select id="FK_proveedor" name="FK_proveedor" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Forma de pago *</label>
+            <select id="FK_forma_pago" name="FK_forma_pago" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Condición de pago *</label>
+            <select id="FK_condicion_pago" name="FK_condicion_pago" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones </label>
+            <textarea id="observaciones" name="observaciones" type="text" class="form-control"></textarea>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+    </div>
+    <button id="btnGuardar" type="submit" class="btn btn-primary" hidden></button>
+</form>
+
+@section botones{
+    <a href="/ProveedoresOrdenesCompras/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Órdenes de compra</span></a>
+    <a href="~/ProveedoresOrdenesCompras/Index" class="btn btn-outline-primary"><i class="fas fa-times"></i><span class="d-none d-sm-inline"> Cancelar</span></a>
+    <button type="button" onclick="javascript:Guardar();" class="btn btn-primary"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Guardar</span></button>
+}
+
+@section scripts{
+    <script>
+
+        //VALIDACION BOOTSTRAP
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $("#FK_bodega").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectBodega",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        $("#FK_proveedor").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectProveedor",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        $("#FK_forma_pago").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectFormaPago",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        $("#FK_condicion_pago").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectCondicionPago",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        function Guardar() {
+            $("#btnGuardar").trigger("click");
+        }
+
+        //Muestra el valor seleccionado por defecto.
+        var $newOption2 = $("<option selected='selected'></option>").val('@FormaPago.PK_codigo').text('@FormaPago.nombre');
+        $("#FK_forma_pago").append($newOption2).trigger('change');
+        var $newOption2 = $("<option selected='selected'></option>").val('@CondicionPago.PK_codigo').text('@CondicionPago.nombre');
+        $("#FK_condicion_pago").append($newOption2).trigger('change');
+
+    </script>
+}
+

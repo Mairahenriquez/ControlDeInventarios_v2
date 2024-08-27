@@ -1,0 +1,129 @@
+﻿@model ControlDeInventarios.entities.vw_contabilidad_cuentas_contables
+@{
+    ViewBag.Title = "Cuentas contables";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800"><i class="fa-solid fa-pen-to-square" style="color: #6b6d76;"></i> Cuenta contable # @Model.PK_codigo</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<form class="modal-content needs-validation" method="post" novalidate>
+    <div class="row">
+        <input id="PK_codigo" name="PK_codigo" type="text" value="@Model.PK_codigo" class="form-control" hidden>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Número de cuenta *</label>
+            <input id="numero" name="numero" type="text" value="@Model.numero" class="form-control" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Nombre *</label>
+            <input id="nombre" name="nombre" type="text" value="@Model.nombre" class="form-control" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Clasificación *</label>
+            <select id="FK_clasificasion" name="FK_clasificasion" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cuenta padre *</label>
+            <select id="FK_cuenta_contable" name="FK_cuenta_contable" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="lblinfo">Cuenta mayor</label><br />
+            <div class="form-check">
+                <input id="cuenta_mayor" name="cuenta_mayor" type="checkbox" class="form-check-input" value="true" @(Model.cuenta_mayor ? "checked=\"checked\"" : "") />
+            </div>
+        </div>
+    </div>
+    <button type="submit" id="btnGuardar" class="btn btn-primary" hidden></button>
+</form>
+
+@section botones{
+    <a href="/ContabilidadCuentasContables/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Cuentas contables</span></a>
+    <a href="~/ContabilidadCuentasContables/Details/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fas fa-times"></i><span class="d-none d-sm-inline"> Cancelar</span></a>
+    <button type="button" onclick="javascript:Guardar();" class="btn btn-primary"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Guardar</span></button>
+}
+
+@section scripts{
+    <script>
+
+        //VALIDACION BOOTSTRAP
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $("#FK_clasificasion").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectClasificacionCuentaContable",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        $("#FK_cuenta_contable").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectCuentaContable",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        //Muestra el valor seleccionado por defecto.
+        var $newOption2 = $("<option selected='selected'></option>").val('@Model.FK_clasificasion').text('@Html.Raw(@Model.clasificacion)');
+        $("#FK_clasificasion").append($newOption2).trigger('change');
+        var $newOption2 = $("<option selected='selected'></option>").val('@Model.FK_cuenta_contable').text('@Html.Raw(@Model.cuenta_padre)');
+        $("#FK_cuenta_contable").append($newOption2).trigger('change');
+
+        function Guardar() {
+            $("#btnGuardar").trigger("click");
+        }
+
+    </script>
+}

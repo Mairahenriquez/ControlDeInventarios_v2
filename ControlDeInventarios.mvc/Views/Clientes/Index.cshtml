@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_clientes>
+@{
+    ViewBag.Title = "Clientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Clientes</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Nombre</th>
+                        <th class="text-center" scope="col">Teléfono</th>
+                        <th class="text-center" scope="col">Cargos</th>
+                        <th class="text-center" scope="col">Abonos</th>
+                        <th class="text-center" scope="col">Total</th>
+                        <th class="text-center" scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _clientes in Model)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row"><a href="/Clientes/Details/@_clientes.PK_codigo">@_clientes.PK_codigo</a></th>
+                            <td>@_clientes.nombre</td>
+                            <td>@_clientes.telefono</td>
+                            <td class="text-end">@_clientes.cargos.ToString("C2")</td>
+                            <td class="text-end">@_clientes.abonos.ToString("C2")</td>
+                            <td class="text-end">@_clientes.total.ToString("C2")</td>
+                            <td>
+                                <label style="color:@_clientes.estado_color"><i class="fa fa-circle"></i></label>
+                                <label>@_clientes.estado</label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="~/Clientes/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+}

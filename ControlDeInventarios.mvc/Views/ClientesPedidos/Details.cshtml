@@ -1,0 +1,330 @@
+﻿@model ControlDeInventarios.entities.vw_clientes_pedidos
+@{
+    ViewBag.Title = "Pedidos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _detalle = ViewBag._detalle;
+    var _facturas = ViewBag._facturas;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Pedido # @Model.PK_codigo </h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha:</label><br />
+            <label class="form-label bold">@Model.fecha.ToString("yyyy-MM-dd")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Referencia:</label><br />
+            <label class="form-label bold">@Model.referencia</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cliente:</label><br />
+            <label class="form-label bold">@Model.cliente</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Forma de pago: </label><br />
+            <label class="form-label bold">@Model.forma_pago</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Condición de pago: </label><br />
+            <label class="form-label bold">@Model.condicion_pago</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones: </label><br />
+            <label class="form-label bold">@Model.observaciones</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label>Estado:</label><br />
+            <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
+            <label class="form-label bold">@Model.estado</label>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#Detalle">AGREGAR PRODUCTOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#Facturas">FACTURAS DE VENTA</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12">
+            <div class="tab-content">
+                <!-- Tab panes Detalle -->
+                <div class="tab-pane container active" id="Detalle">
+                    <table class="table table-bordered" id="myTable_Detalle">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">Identificador</th>
+                                <th class="text-center" scope="col">Descripción</th>
+                                <th class="text-center" scope="col">Cantidad</th>
+                                <th class="text-center" scope="col">Precio unitario</th>
+                                <th class="text-center" scope="col">Subtotal</th>
+                                <th class="text-center" scope="col">Iva</th>
+                                <th class="text-center" scope="col">Total</th>
+                                @if (Model.FK_estado == 1)
+                                {
+                                    <th class="text-center" scope="col">Opciones</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _a in _detalle)
+                            {
+                                <tr>
+                                    <td>@_a.inventario_identificador</td>
+                                    <td>@_a.descripcion</td>
+                                    <td class="text-end">@_a.cantidad.ToString("N2")</td>
+                                    <td class="text-end">@_a.precio_unitario.ToString("C2")</td>
+                                    <td class="text-end">@_a.subtotal.ToString("C2")</td>
+                                    <td class="text-end">@_a.iva.ToString("C2")</td>
+                                    <td class="text-end">@_a.total.ToString("C2")</td>
+                                    @if (Model.FK_estado == 1)
+                                    {
+                                        <td class="text-center">
+                                            <a href="/ClientesPedidos/Delete/@_a.PK_codigo"><i class="fa-solid fa-trash-can"></i></a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Tab panes Compras -->
+                <div class="tab-pane container fade" id="Facturas">
+                    <table class="table table-bordered" id="myTable_Compras">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">N°</th>
+                                <th class="text-center" scope="col">Fecha</th>
+                                <th class="text-center" scope="col">Concepto</th>
+                                <th class="text-center" scope="col">subtotal</th>
+                                <th class="text-center" scope="col">Iva</th>
+                                <th class="text-center" scope="col">Total</th>
+                                <th class="text-center" scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _b in _facturas)
+                            {
+                            <tr>
+                                <th class="text-center" scope="row"><a href="/ClientesFacturacion/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
+                                <td>@_b.fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@_b.concepto</td>
+                                <td class="text-end">@_b.subtotal.ToString("C2")</td>
+                                <td class="text-end">@_b.iva.ToString("C2")</td>
+                                <td class="text-end">@_b.total.ToString("C2")</td>
+                                <td>
+                                    <label style="color:@_b.estado_color"><i class="fa fa-circle"></i></label>
+                                    <label>@_b.estado</label>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="/ClientesPedidos/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Pedidos</span></a>
+    <a href="~/ClientesPedidos/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+    <a href="~/ClientesPedidos/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Opciones
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.FK_estado == 1)
+            {
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Procesar,'¿Desea procesar el pedido?');"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>
+                <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_agregar_productos"><i class="fa-solid fa-circle-check"></i> Agregar productos</a> </li>
+            }
+        </ul>
+    </div>
+}
+
+<!-- Modal para agregar productos -->
+<div class="modal fade" id="modal_agregar_productos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content needs-validation" id="form_agregar_productos" action="javascript:AgregarProducto();" method="post" novalidate>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar productos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-12 mt-2">
+                        <label class="form-label">Producto *</label>
+                        <select id="txt_FK_inventario" name="txt_FK_inventario" class="form-control" onchange="ValidarDatos();" required></select>
+                        <div class="invalid-feedback">Requerido</div>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <label class="form-label">Cantidad *</label>
+                        <input id="txt_cantidad" name="txt_cantidad" value="1.00" class="form-control text-end" required />
+                        <div class="invalid-feedback">Requerido</div>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <label class="form-label">Precio unitario sin IVA *</label>
+                        <input id="txt_costo_unitario" name="txt_costo_unitario" value="0.00" class="form-control text-end" required />
+                        <div class="invalid-feedback">Requerido</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Agregar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        //Validación bootstrap.
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Detalle');
+        });
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Compras');
+        });
+
+        $("#txt_FK_inventario").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            dropdownParent: $('#modal_agregar_productos'),
+            ajax: {
+                url: "../../Select2/SelectInventariosVendible",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        //Agregar producto.
+        function AgregarProducto() {
+            var FK_inventario = document.getElementById("txt_FK_inventario").value; //le pone lo que esta en el modal.
+            var cantidad = document.getElementById("txt_cantidad").value; //le pone lo que esta en el modal.
+            var precio_unitario = document.getElementById("txt_costo_unitario").value; //le pone lo que esta en el modal.
+
+            //Carga los datos del registro a editar;
+            var value = {
+                FK_pedido: @Model.PK_codigo,
+                FK_inventario: FK_inventario,
+                cantidad: cantidad,
+                precio_unitario: precio_unitario
+            }
+
+            //Hace la peticion AJAX para guardar registro.
+            $.ajax({
+                url: '/ClientesPedidos/Insert',
+                type: "POST",
+                data: JSON.stringify(value),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //Actualizar pagina.
+                    location.reload();
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+        //Validar datos del producto.
+        function ValidarDatos() {
+            var id = document.getElementById("txt_FK_inventario").value; //le pone lo que esta en el modal.
+            var cantidad = document.getElementById("txt_cantidad").value; //le pone lo que esta en el modal.
+
+            //Carga los datos del registro a editar;
+            var value = {
+                id: id
+            }
+
+            //Hace la peticion AJAX para guardar registro.
+            $.ajax({
+                url: '/ClientesPedidos/ValidarDatos',
+                type: "POST",
+                data: JSON.stringify(value),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //Actualizar datos del modal.
+                    if (data != null) {
+                        var precio = data.precio_unitario;
+                        var cant = data.existencia_fisica;
+                        $("#txt_costo_unitario").val(precio.toFixed(2));
+                        if (data.existencia_fisica < cantidad) {
+                            $("#txt_cantidad").val(cant.toFixed(2));
+                        }
+                    }
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+        //Activar.
+        function Procesar() {
+            $.ajax({
+                type: "GET",
+                url: "../../ClientesPedidos/Procesar?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+
+    </script>
+}

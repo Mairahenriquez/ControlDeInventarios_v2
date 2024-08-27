@@ -1,0 +1,71 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_inventarios_movimientos>
+@{
+    ViewBag.Title = "Movimientos de Inventarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Movimiento de Inventarios</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Fecha</th>
+                        <th class="text-center" scope="col">Tipo de Movimiento</th>
+                        <th class="text-center" scope="col">Bodega entrada</th>
+                        <th class="text-center" scope="col">Bodega destino</th>
+                        <th class="text-center" scope="col">Referencia</th>
+                        <th class="text-center" scope="col">Observaciones</th>
+                        <th class="text-center" scope="col">Estado</th>
+                        <th class="text-center" scope="col">Costo total</th>
+                        <th class="text-center" scope="col">Precio total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _pedidos in Model)
+                    {
+                    <tr>
+                        <th class="text-center" scope="row"><a href="/InventariosMovimientos/Details/@_pedidos.PK_codigo">@_pedidos.PK_codigo</a></th>
+                        <td class="text-end">@_pedidos.fecha.ToString("dd-MM-yyyy")</td>
+                        <td>@_pedidos.tipo_movimiento</td>
+                        <td>@_pedidos.bodega</td>
+                        <td>@_pedidos.bodega_destino</td>
+                        <td>@_pedidos.referencia</td>
+                        <td>@_pedidos.observaciones</td>
+                        <td>
+                            <label style="color:@_pedidos.estado_color"><i class="fa fa-circle"></i></label>
+                            <label>@_pedidos.estado</label>
+                        </td>
+                        <td class="text-end">@_pedidos.costo_total.ToString("C2") </td>
+                        <td class="text-end">@_pedidos.precio_total.ToString("C2")</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="~/InventariosMovimientos/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+}

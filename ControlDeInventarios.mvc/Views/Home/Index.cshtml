@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Integrantes</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Carnet</th>
+                        <th class="text-center" scope="col">Nombres</th>
+                        <th class="text-center" scope="col">Apellidos</th>
+                        <th class="text-center" scope="col">Correo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td>CH17013</td>
+                        <td>Maira Yesenia</td>
+                        <td>Castro Henríquez</td>
+                        <td>ch17013@ues.edu.sv</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">2</td>
+                        <td>CS21062</td>
+                        <td>Antonio Natanael</td>
+                        <td>Cabezas Sánchez</td>
+                        <td>cs21062@ues.edu.sv</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">3</td>
+                        <td>EH18010</td>
+                        <td>Cristian Antonio</td>
+                        <td>Escalante Hernandez</td>
+                        <td>eh18010@ues.edu.sv</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">4</td>
+                        <td>AO17006</td>
+                        <td>Edgar Adolfo</td>
+                        <td>Avelar Ortiz</td>
+                        <td>ao17006@ues.edu.sv</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="~/Inventarios/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            let table = new DataTable('#myTable');
+        });
+    </script>
+}
+

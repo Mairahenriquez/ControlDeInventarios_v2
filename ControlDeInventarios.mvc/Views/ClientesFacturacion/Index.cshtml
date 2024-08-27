@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_facturacion>
+
+@{
+    ViewBag.Title = "Facturas de ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Facturas de ventas</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Concepto</th>
+                        <th class="text-center" scope="col">Cliente</th>
+                        <th class="text-center" scope="col">Fecha</th>
+                        <th class="text-center" scope="col">Subtotal</th>
+                        <th class="text-center" scope="col">Iva</th>
+                        <th class="text-center" scope="col">Total</th>
+                        <th class="text-center" scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _facturas in Model)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row"><a href="/ClientesFacturacion/Details/@_facturas.PK_codigo">@_facturas.PK_codigo</a></th>
+                            <td>@_facturas.concepto</td>
+                            <td>@_facturas.cliente</td>
+                            <td>@_facturas.fecha.ToString("dd-MM-yyyy")</td>
+                            <td class="text-end">@_facturas.subtotal.ToString("C2")</td>
+                            <td class="text-end">@_facturas.iva.ToString("C2")</td>
+                            <td class="text-end">@_facturas.total.ToString("C2")</td>
+                            <td>
+                                <label style="color:@_facturas.estado_color"><i class="fa fa-circle"></i></label>
+                                <label>@_facturas.estado</label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+}

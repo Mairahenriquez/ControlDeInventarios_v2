@@ -1,0 +1,83 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row my-5">
+    <div class="col-12">
+        <div class="w-100 mx-auto" style="max-width: 580px;">
+            @if (TempData["error_message"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                    @TempData["error_message"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["success_message"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                    @TempData["success_message"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            <div class="card w-100 mx-auto" style="max-width: 580px;">
+                <div class="card-header">
+                    <h3 class="card-title">Crear usuario</h3>
+                </div>
+                <div class="card-body">
+                    <form id="crearUsuario" action='@Url.Action("PostRegister","Usuario")' method="post">
+                        @* Usuario *@
+                        <div class="mb-3">
+                            <label for="usuario" class="form-label">Usuario</label>
+                            <input type="text" id="usuario" name="usuario" class="form-control" placeholder="Usuario" required>
+                        </div>
+                        @* Nombre *@
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                        </div>
+                        @* Correo *@
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo</label>
+                            <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo" required>
+                        </div>
+                        @* Telefono *@
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Telefono</label>
+                            <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Telefono" required>
+                        </div>
+                        @* Clave *@
+                        <div class="mb-3">
+                            <label for="contrasena" class="form-label
+            ">Clave</label>
+                            <input type="password" id="contrasena" name="clave" class="form-control" placeholder="Clave" required>
+                        </div>
+                        @* ConfirmClave *@
+                        <div class="mb-3">
+                            <label for="confirmClave" class="form-label">Confirmar Clave</label>
+                            <input type="password" id="confirmClave" name="confirmClave" class="form-control" placeholder="Confirmar Clave" required>
+                        </div>
+                        @* Roles *@
+                        <div class="mb-3">
+                            <label for="roles" class="form-label">Rol</label>
+                            <select id="roles" name="FK_rol" class="form-control">
+                                @foreach (var rol in ViewBag.roles)
+                                {
+                                    <option value="@rol.PK_codigo">@rol.nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-outline-secondary me-3" type="reset">
+                                Limpiar datos
+                            </button>
+                            <button class="btn btn-primary" type="submit">
+                                Registrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

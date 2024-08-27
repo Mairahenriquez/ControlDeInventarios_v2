@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_contabilidad_cuentas_contables>
+@{
+    ViewBag.Title = "Cuentas contables";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .form-check .form-check-input {
+        float: none !important;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Cuentas Contales</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Número</th>
+                        <th class="text-center" scope="col">Nombre</th>
+                        <th class="text-center" scope="col">Cuenta padre</th>
+                        <th class="text-center" scope="col">Clasificación</th>
+                        <th class="text-center" scope="col">Cuenta mayor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _cuentas in Model)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row"><a href="/ContabilidadCuentasContables/Details/@_cuentas.PK_codigo">@_cuentas.PK_codigo</a></th>
+                            <td>@_cuentas.numero</td>
+                            <td>@_cuentas.nombre</td>
+                            <td>@_cuentas.cuenta_padre</td>
+                            <td>@_cuentas.clasificacion</td>
+                            <td class="text-center">
+                                <div class="form-check">
+                                    <input id="cuenta_mayor" name="cuenta_mayor" value="" type="checkbox" class="form-check-input" checked="@_cuentas.cuenta_mayor" disabled />
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="~/ContabilidadCuentasContables/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nueva</span></a>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            let table = new DataTable('#myTable');
+        });
+    </script>
+}

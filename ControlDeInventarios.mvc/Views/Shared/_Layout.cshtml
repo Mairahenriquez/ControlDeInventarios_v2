@@ -1,0 +1,153 @@
+﻿@using System.Web
+@using ControlDeInventarios.mvc.Models
+@{
+    var userData = HttpContext.Current.Items["userData"] as ControlDeInventarios.entities.usuarios;
+    Usuario user = new Usuario(userData.correo);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Sistema de Control de Inventario - @ViewBag.Title</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link src="~/css/assets/img/favicon.png" />
+    <link src="~/css/assets/img/apple-touch-icon.png" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Krub:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/css/assets/vendor/aos/aos.css" rel="stylesheet" />
+    <link href="~/css/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/css/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
+    <link href="~/css/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
+    <link href="~/css/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
+    <link href="~/css/botones_flotantes.css" rel="stylesheet" />
+    <!-- Template Main CSS File -->
+    <link href="~/css/assets/css/style.css" rel="stylesheet" />
+
+    <!-- Librería de Select2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+</head>
+
+<body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center justify-content-between">
+            <h1 class="logo">Sistema de Control de Inventario "MINISUPER GABY"</h1>
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li class="dropdown">
+                        <a href="#"><span>Inventarios</span> <i class="bi bi-chevron-down"></i></a>
+                        <ul>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "Inventarios")'>Inventarios</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "Bodegas")'>Bodegas</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "InventariosMovimientos")'>Movimientos de Inventarios</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "KardexVentas")'>Productos más vendidos</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "KardexAgotado")'>Productos agotados</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#"><span>Compras</span> <i class="bi bi-chevron-down"></i></a>
+                        <ul>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "Proveedores")'>Proveedores</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ProveedoresOrdenesCompras")'>Orden de compra</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ProveedoresCompras")'>Facturas de compra</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#"><span>Ventas</span> <i class="bi bi-chevron-down"></i></a>
+                        <ul>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "Clientes")'>Clientes</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesPedidos")'>Pedidos</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesFacturacion")'>Facturas de venta</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#"><span>Contabilidad</span> <i class="bi bi-chevron-down"></i></a>
+                        <ul>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ContabilidadCuentasContables")'>Cuentas contables</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ContabilidadPartidas")'>Partidas contables</a></li>
+                            @*<li><a class="nav-link scrollto active" href='@Url.Action("Libro_diario", "Inventarios")'>Libro de cuentas</a></li>*@
+                            @*<li><a class="nav-link scrollto active" href='@Url.Action("Libro_diario", "Inventarios")'>Libro mayor</a></li>*@
+                        </ul>
+                    </li>
+                    @*<li><a class="getstarted scrollto contables" href='@Url.Action("Index", "ContabilidadCuentasContables")'>Cuentas</a></li>*@
+                    @if (user.isAdmin())
+                    {
+                        <li class="dropdown">
+                            <a href="#"><span>Configuración</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Crear", "Usuario")'>Usuarios</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @* Logout *@
+                    <li>
+                        <form method="post" action='~/Auth/Logout'>
+                            <button type="submit" class="getstarted scrollto contables"><i class="fa-solid fa-right-from-bracket"></i></button>
+                        </form>
+                    </li>
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+        </div>
+    </header><!-- End Header -->
+
+    <main id="main" class="mb-4">
+        <!-- ======= About Section ======= -->
+        <section @*id="about" class="about"*@>
+            <div class="container">
+                <div class="row no-gutters">
+                    @RenderBody()
+                    @RenderSection("formulario", required: false)
+                </div>
+            </div>
+        </section><!-- End About Section -->
+    </main><!-- End #main -->
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer mt-4">
+        <div class="container d-md-flex py-4">
+            <div class="me-md-auto text-center text-md-start">
+                @RenderSection("botones", required: false)
+            </div>
+        </div>
+    </footer><!-- End Footer -->
+
+    <div id="preloader"></div>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <!-- Vendor JS Files -->
+    <script src="~/css/assets/vendor/aos/aos.js"></script>
+    <script src="~/css/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/css/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="~/css/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="~/css/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="~/css/assets/vendor/php-email-form/validate.js"></script>
+    <!-- Template Main JS File -->
+    <script src="~/css/assets/js/main.js?fecha=20221106"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+    <!-- Librería de Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+
+    <!-- Librería de Fontawesome -->
+    <script src="https://kit.fontawesome.com/03eb782f44.js" crossorigin="anonymous"></script>
+
+    <!-- Librería de SweetAlert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

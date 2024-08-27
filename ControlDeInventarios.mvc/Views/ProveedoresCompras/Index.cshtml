@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_proveedores_compras>
+
+@{
+    ViewBag.Title = "Facturas de compras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Factura de compras</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Documento</th>
+                        <th class="text-center" scope="col">Proveedor</th>
+                        <th class="text-center" scope="col">Fecha</th>
+                        <th class="text-center" scope="col">Subtotal</th>
+                        <th class="text-center" scope="col">Iva</th>
+                        <th class="text-center" scope="col">Total</th>
+                        <th class="text-center" scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _ordenes in Model)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row"><a href="/ProveedoresCompras/Details/@_ordenes.PK_codigo">@_ordenes.PK_codigo</a></th>
+                            <td>@_ordenes.documento</td>
+                            <td>@_ordenes.proveedor</td>
+                            <td>@_ordenes.fecha.ToString("dd-MM-yyyy")</td>
+                            <td class="text-end">@_ordenes.subtotal.ToString("C2")</td>
+                            <td class="text-end">@_ordenes.iva.ToString("C2")</td>
+                            <td class="text-end">@_ordenes.total.ToString("C2")</td>
+                            <td>
+                                <label style="color:@_ordenes.estado_color"><i class="fa fa-circle"></i></label>
+                                <label>@_ordenes.estado</label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+}

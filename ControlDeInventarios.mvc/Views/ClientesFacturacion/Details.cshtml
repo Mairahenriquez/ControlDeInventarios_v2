@@ -1,0 +1,312 @@
+﻿@model ControlDeInventarios.entities.vw_facturacion
+@{
+    ViewBag.Title = "Facturas de ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _detalle = ViewBag._detalle;
+    var _movimientos = ViewBag._movimientos;
+    var _partidas = ViewBag._partidas;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Factura de ventas # @Model.PK_codigo </h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Concepto:</label><br />
+            <label class="form-label bold">@Model.concepto</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha:</label><br />
+            <label class="form-label bold">@Model.fecha.ToString("yyyy-MM-dd")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cliente:</label><br />
+            <label class="form-label bold">@Model.cliente</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Forma de pago: </label><br />
+            <label class="form-label bold">@Model.forma_pago</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Condición de pago: </label><br />
+            <label class="form-label bold">@Model.condicion_pago</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones: </label><br />
+            <label class="form-label bold">@Model.observaciones</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label>Estado:</label><br />
+            <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
+            <label class="form-label bold">@Model.estado</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Movimiento: </label><br />
+            <label class="form-label bold">@Model.FK_movimiento</label>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#Detalle">DETALLE PRODUCTOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#Movimientos">MOVIMIENTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#Partidas">PARTIDAS CONTABLE</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12">
+            <div class="tab-content">
+                <!-- Tab panes Detalle -->
+                <div class="tab-pane container active" id="Detalle">
+                    <table class="table table-bordered" id="myTable_Detalle">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">Identificador</th>
+                                <th class="text-center" scope="col">Descripción</th>
+                                <th class="text-center" scope="col">Cantidad</th>
+                                <th class="text-center" scope="col">Precio unitario</th>
+                                <th class="text-center" scope="col">Subtotal</th>
+                                <th class="text-center" scope="col">Iva</th>
+                                <th class="text-center" scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _a in _detalle)
+                            {
+                                <tr>
+                                    <td>@_a.inventario_identificador</td>
+                                    <td>@_a.descripcion</td>
+                                    <td class="text-end">@_a.cantidad.ToString("N2")</td>
+                                    <td class="text-end">@_a.precio_unitario.ToString("C2")</td>
+                                    <td class="text-end">@_a.subtotal.ToString("C2")</td>
+                                    <td class="text-end">@_a.iva.ToString("C2")</td>
+                                    <td class="text-end">@_a.total.ToString("C2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Tab panes Movimientos -->
+                <div class="tab-pane container fade" id="Movimientos">
+                    <table class="table table-bordered" id="myTable_Movimientos">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">N°</th>
+                                <th class="text-center" scope="col">Fecha</th>
+                                <th class="text-center" scope="col">Referencia</th>
+                                <th class="text-center" scope="col">Bodega</th>
+                                <th class="text-center" scope="col">Estado</th>
+                                <th class="text-center" scope="col">Costo total</th>
+                                <th class="text-center" scope="col">Precio total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _b in _movimientos)
+                            {
+                            <tr>
+                                <th class="text-center" scope="row"><a href="/InventariosMovimientos/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
+                                <td class="text-end">@_b.fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@_b.referencia</td>
+                                <td>@_b.bodega</td>
+                                <td>
+                                    <label style="color:@_b.estado_color"><i class="fa fa-circle"></i></label>
+                                    <label>@_b.estado</label>
+                                </td>
+                                <td class="text-end">@_b.costo_total.ToString("C2") </td>
+                                <td class="text-end">@_b.precio_total.ToString("C2")</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Tab panes Partidas -->
+                <div class="tab-pane container fade" id="Partidas">
+                    <table class="table table-bordered" id="myTable_Partidas">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">N°</th>
+                                <th class="text-center" scope="col">Fecha</th>
+                                <th class="text-center" scope="col">Concepto</th>
+                                <th class="text-center" scope="col">Cargos</th>
+                                <th class="text-center" scope="col">Abonos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _c in _partidas)
+                            {
+                            <tr>
+                                <th class="text-center" scope="row"><a href="/ContabilidadPartidas/Details/@_c.PK_codigo">@_c.PK_codigo</a></th>
+                                <td class="text-end">@_c.fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@_c.concepto</td>
+                                <td class="text-end">@_c.cargos.ToString("C2")</td>
+                                <td class="text-end">@_c.abonos.ToString("C2")</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="/ClientesFacturacion/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Facturas de ventas</span></a>
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Opciones
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.FK_estado == 1)
+            {
+                @*<li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Procesar,'¿Desea procesar la factura?');"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>*@
+                <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_seleccionar_bodega"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Anular,'¿Desea anular la factura?');"><i class="fa-solid fa-circle-check"></i> Anular</a> </li>
+            }
+        </ul>
+    </div>
+}
+
+<!-- Modal para agregar productos -->
+<div class="modal fade" id="modal_seleccionar_bodega" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content needs-validation" id="form_seleccionar_bodega" action="javascript:Procesar();" method="post" novalidate>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Procesar factura</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Seleccione la bodega, para la salida de producto.
+                    <div class="col-12 mt-2">
+                        <label class="form-label">Bodega *</label>
+                        <select id="txt_FK_bodega" name="txt_FK_bodega" class="form-control" onchange="ValidarDatos();" required></select>
+                        <div class="invalid-feedback">Requerido</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Procesar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        //Validación bootstrap.
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Detalle');
+        });
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Movimientos');
+        });
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Partidas');
+        });
+
+        //Procesar.
+
+        //Agregar producto.
+        function Procesar() {
+            var FK_bodega = document.getElementById("txt_FK_bodega").value; //le pone lo que esta en el modal.
+
+            //Carga los datos del registro a editar;
+            var value = {
+                id: @Model.PK_codigo,
+                FK_bodega: FK_bodega,
+            }
+
+            //Hace la peticion AJAX para guardar registro.
+            $.ajax({
+                url: '/ClientesFacturacion/Procesar',
+                type: "POST",
+                data: JSON.stringify(value),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //Actualizar pagina.
+                    location.reload();
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+        //Anular.
+        function Anular() {
+            $.ajax({
+                type: "GET",
+                url: "../../ClientesFacturacion/Anular?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+
+        $("#txt_FK_bodega").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            dropdownParent: $('#modal_seleccionar_bodega'),
+            ajax: {
+                url: "../../Select2/SelectBodega",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+    </script>
+}

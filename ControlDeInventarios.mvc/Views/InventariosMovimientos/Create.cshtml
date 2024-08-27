@@ -1,0 +1,155 @@
+﻿
+@{
+    ViewBag.Title = "Movimientos de Inventarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var TipoMovimiento = (ControlDeInventarios.entities.inventarios_movimientos_tipos)ViewBag.TipoMovimiento;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800"><i class="fa-solid fa-circle-plus" style="color: #6b6d76;"></i> Movimiento de Inventarios</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<form class="modal-content needs-validation" method="post" novalidate>
+    <div class="row">
+        <input id="PK_codigo" name="PK_codigo" type="text" class="form-control" hidden>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Tipo de movimiento *</label>
+            <select id="FK_tipo_movimiento" name="FK_tipo_movimiento" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Bodega entrada *</label>
+            <select id="FK_bodega" name="FK_bodega" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Bodega destino*</label>
+            <select id="FK_bodega_destino" name="FK_bodega_destino" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha *</label>
+            <input id="fecha" name="fecha" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-end" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Referencia *</label>
+            <input id="referencia" name="referencia" type="text" class="form-control" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones </label>
+            <textarea id="observaciones" name="observaciones" type="text" class="form-control"></textarea>
+        </div>
+    </div>
+    <button id="btnGuardar" type="submit" class="btn btn-primary" hidden></button>
+</form>
+
+@section botones{
+    <a href="/InventariosMovimientos/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Movimientos de Inventarios</span></a>
+    <a href="~/InventariosMovimientos/Index" class="btn btn-outline-primary"><i class="fas fa-times"></i><span class="d-none d-sm-inline"> Cancelar</span></a>
+    <button type="button" onclick="javascript:Guardar();" class="btn btn-primary"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Guardar</span></button>
+}
+
+@section scripts{
+    <script>
+
+        //VALIDACION BOOTSTRAP
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $("#FK_bodega").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectBodega",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+
+        $("#FK_bodega_destino").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectBodega",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        $("#FK_tipo_movimiento").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectTipoMovimiento",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        function Guardar() {
+            $("#btnGuardar").trigger("click");
+        }
+
+        //Muestra el valor seleccionado por defecto.
+        var $newOption2 = $("<option selected='selected'></option>").val('@TipoMovimiento.PK_codigo').text('@TipoMovimiento.nombre');
+        $("#FK_tipo_movimiento").append($newOption2).trigger('change');
+
+    </script>
+}

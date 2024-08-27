@@ -1,0 +1,126 @@
+﻿@model ControlDeInventarios.entities.vw_contabilidad_partidas
+@{
+    ViewBag.Title = "Partidas contables";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _detalle = ViewBag._detalle;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Partida contable # @Model.PK_codigo </h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Concepto:</label><br />
+            <label class="form-label bold">@Model.concepto</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha:</label><br />
+            <label class="form-label bold">@Model.fecha.ToString("yyyy-MM-dd")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cargos:</label><br />
+            <label class="form-label bold">@Model.cargos.ToString("C2")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Abonos:</label><br />
+            <label class="form-label bold">@Model.abonos.ToString("C2")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label>Estado:</label><br />
+            <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
+            <label class="form-label bold">@Model.estado</label>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#Detalle">DETALLE</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12">
+            <div class="tab-content">
+                <!-- Tab panes Detalle -->
+                <div class="tab-pane container active" id="Detalle">
+                    <table class="table table-bordered" id="myTable_Detalle">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">Fecha</th>
+                                <th class="text-center" scope="col">Número de cuenta</th>
+                                <th class="text-center" scope="col">Cuenta</th>
+                                <th class="text-center" scope="col">Tipo</th>
+                                <th class="text-center" scope="col">Cargos</th>
+                                <th class="text-center" scope="col">Abonos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _a in _detalle)
+                            {
+                                <tr>
+                                    <td class="text-end">@_a.fecha.ToString("dd-MM-yyyy")</td>
+                                    <td>@_a.numero_cuenta</td>
+                                    <td>@_a.nombre_cuenta</td>
+                                    <td>@_a.tipo</td>
+                                    <td class="text-end">@_a.cargo.ToString("C2")</td>
+                                    <td class="text-end">@_a.abono.ToString("C2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="/ContabilidadPartidas/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Partidas contables</span></a>
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Opciones
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.FK_estado == 1)
+            {
+                @*<li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Procesar,'¿Desea procesar la partida contable?');"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>*@
+            }
+        </ul>
+    </div>
+}
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Detalle');
+        });
+
+        //Procesar.
+        function Procesar() {
+            $.ajax({
+                type: "GET",
+                url: "../../ContabilidadPartidas/Procesar?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_contabilidad_partidas>
+@{
+    ViewBag.Title = "Partidas contables";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Partida contable</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Concepto</th>
+                        <th class="text-center" scope="col">Fecha</th>
+                        <th class="text-center" scope="col">Cargos</th>
+                        <th class="text-center" scope="col">Abonos</th>
+                        <th class="text-center" scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _partida in Model)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row"><a href="/ContabilidadPartidas/Details/@_partida.PK_codigo">@_partida.PK_codigo</a></th>
+                            <td>@_partida.concepto</td>
+                            <td class="text-end">@_partida.fecha.ToString("dd-MM-yyyy")</td>
+                            <td class="text-end">@_partida.cargos.ToString("C2")</td>
+                            <td class="text-end">@_partida.abonos.ToString("C2")</td>
+                            <td>
+                                <label style="color:@_partida.estado_color"><i class="fa fa-circle"></i></label>
+                                <label>@_partida.estado</label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+}

@@ -1,0 +1,181 @@
+﻿@model ControlDeInventarios.entities.vw_inventarios
+@{
+    ViewBag.Title = "Inventarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Inventario # @Model.PK_codigo</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<form class="modal-content needs-validation" method="post" novalidate>
+    <div class="row">
+        <input id="PK_codigo" name="PK_codigo" type="text" value="@Model.PK_codigo" class="form-control" hidden>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Identificador *</label>
+            <input id="identificador" name="identificador" type="text" value="@Model.identificador" class="form-control" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Descripción *</label>
+            <input id="descripcion" name="descripcion" type="text" value="@Model.descripcion" class="form-control" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha de vencimiento </label>
+            <input id="fecha_vencimiento" name="fecha_vencimiento" type="date" value="@(Model.fecha_vencimiento?.ToString("yyyy-MM-dd"))" class="form-control text-end">
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cuenta contable inventarios *</label>
+            <select id="FK_cuenta_contable_inventarios" name="FK_cuenta_contable_inventarios" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cuenta contable costo de venta *</label>
+            <select id="FK_cuenta_contable_costo_venta" name="FK_cuenta_contable_costo_venta" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cuenta contable ingreso por venta *</label>
+            <select id="FK_cuenta_contable_ingreso_venta" name="FK_cuenta_contable_ingreso_venta" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Porcentaje de ganacia * </label>
+            <input id="porcentaje_ganacia" name="porcentaje_ganacia" type="number" value="@Model.porcentaje_ganacia.ToString("N2")" step="0.01" class="form-control text-end" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones </label>
+            <textarea id="observaciones" name="observaciones" type="text" class="form-control">@Model.observaciones</textarea>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="lblinfo">Comprable</label><br />
+            <div class="form-check">
+                <input id="comprable" name="comprable" type="checkbox" class="form-check-input" value="true" @(Model.comprable ? "checked=\"checked\"" : "") />
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="lblinfo">Vendible</label><br />
+            <div class="form-check">
+                <input id="vendible" name="vendible" type="checkbox" class="form-check-input" value="true" @(Model.vendible ? "checked=\"checked\"" : "") />
+            </div>
+        </div>
+    </div>
+    <button type="submit" id="btnGuardar" class="btn btn-primary" hidden></button>
+</form>
+
+@section botones{
+    <a href="/Inventarios/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Inventarios</span></a>
+    <a href="~/Inventarios/Details/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fas fa-times"></i><span class="d-none d-sm-inline"> Cancelar</span></a>
+    <button type="button" onclick="javascript:Guardar();" class="btn btn-primary"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Guardar</span></button>
+}
+
+@section scripts{
+    <script>
+
+        //VALIDACION BOOTSTRAP
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $("#FK_cuenta_contable_inventarios").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectCuentaContable",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        $("#FK_cuenta_contable_costo_venta").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectCuentaContable",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        $("#FK_cuenta_contable_ingreso_venta").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectCuentaContable",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        //Muestra el valor seleccionado por defecto.
+        var $newOption2 = $("<option selected='selected'></option>").val('@Model.FK_cuenta_contable_inventarios').text('@Html.Raw(@Model.cuenta_contable_inventarios)');
+        $("#FK_cuenta_contable_inventarios").append($newOption2).trigger('change');
+        var $newOption2 = $("<option selected='selected'></option>").val('@Model.FK_cuenta_contable_costo_venta').text('@Html.Raw(@Model.cuenta_contable_costo_venta)');
+        $("#FK_cuenta_contable_costo_venta").append($newOption2).trigger('change');
+        var $newOption2 = $("<option selected='selected'></option>").val('@Model.FK_cuenta_contable_ingreso_venta').text('@Html.Raw(@Model.cuenta_contable_ingreso_venta)');
+        $("#FK_cuenta_contable_ingreso_venta").append($newOption2).trigger('change');
+
+        function Guardar() {
+            $("#btnGuardar").trigger("click");
+        }
+
+    </script>
+}
