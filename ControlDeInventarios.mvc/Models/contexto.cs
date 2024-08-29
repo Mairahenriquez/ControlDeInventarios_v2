@@ -56,5 +56,8 @@ namespace ControlDeInventarios.mvc.Models
         public DbSet<usuarios_roles> usuarios_roles { get; set; }
         public DbSet<password_reset> password_reset { get; set; }
         public DbSet<vw_inventarios_kardex_ventas> vw_inventarios_kardex_ventas { get; set; }
+
+        public DbSet<nota_debito> notas_debito{ get; set; }
+        public DbSet<nota_debito_detalle> nota_debito_detalles{ get; set; }
     }
 }

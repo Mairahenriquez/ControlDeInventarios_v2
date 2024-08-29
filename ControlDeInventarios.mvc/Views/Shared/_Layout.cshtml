@@ -36,13 +36,19 @@
     <!-- Librería de Select2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+    <style>
+        .logo-brand {
+            font-size: clamp(0.75rem, 0.608rem + 0.4545vw, 1.125rem) !important;
+        }
+    </style>
 </head>
 
 <body>
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center justify-content-between">
-            <h1 class="logo">Sistema de Control de Inventario "MINISUPER GABY"</h1>
+            <h1 class="logo logo-brand">Sistema de Control de Inventario "MINISUPER GABY"</h1>
             <nav id="navbar" class="navbar">
                 <ul>
                     <li class="dropdown">
@@ -69,6 +75,7 @@
                             <li><a class="nav-link scrollto" href='@Url.Action("Index", "Clientes")'>Clientes</a></li>
                             <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesPedidos")'>Pedidos</a></li>
                             <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesFacturacion")'>Facturas de venta</a></li>
+                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "NotaDebito")'>Notas de debito</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
