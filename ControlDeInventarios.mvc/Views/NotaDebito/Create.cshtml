@@ -57,11 +57,19 @@
         <tfoot>
             <tr>
                 <td>Total</td>
-                <td id="total_td">0</td>
+                <td style="text-align:right;" id="total_td">0</td>
                 <td></td>
             </tr>
         </tfoot>
     </table>
+    <form id="_form">
+               <div class="row">
+                   <div class="col-12">
+                       <label>Comentario * </label>
+                       <textarea class="form-control" name="comentario" required></textarea>
+                   </div>
+               </div>
+    </form>
 </div>
 
 <!-- Modal -->
@@ -75,11 +83,13 @@
 }
 
 @section scripts{
-    <script defer>
-
+    <script>
+        let extraForm = document.getElementById("_form");
         let cargoForm = document.getElementById("cargoForm");
+
         let modal = (document.getElementById("myModal"));
         let totalCargos = 0;
+        let factura_id = "@ViewBag.factura.PK_codigo";
         function onAddCargo(event){
             event.preventDefault();
             if (!cargoForm.checkValidity()) return;
@@ -93,20 +103,22 @@
             let newRow = table.insertRow();
             let cell1 = newRow.insertCell(0);
             let cell2 = newRow.insertCell(1);
+            cell2.classList.add("text-end");
             let cell3 = newRow.insertCell(2);
 
             cell1.textContent = data["concepto"];
-            cell2.textContent = data["valor"];
+            cell2.textContent = parseFloat(data["valor"]).toFixed(2);
             cell3.innerHTML = `<button type="button" class="btn btn-danger" onclick="onDeleteRow(this)">Eliminar</button>`;
 
-            modal.classList.toggle("show");
-            (document.querySelector(".modal-backdrop.fade.show")).classList.toggle("show");
+            modal.querySelector(".btn-close").click();
+           
             cargoForm.reset();
             updateTotalCargos();
         }
         function onDeleteRow(btn){
             let row = btn.parentNode.parentNode;
             row.parentNode.removeChild(row);
+            updateTotalCargos();
         }
         function updateTotalCargos() {
             let total = 0;
@@ -115,8 +127,57 @@
                 total += parseFloat(table.rows[i].cells[1].textContent);
             }
             document.getElementById("total_td").textContent = total.toFixed(2);
+
+            totalCargos = total;
         }
 
+        async function Guardar() {
+            if (!extraForm.reportValidity()) return;
+            if (totalCargos <= 0 ) {
+                let res = await swal({
+                    title:"Tienes un error en tus datos",
+                    text:  "Debes introducir por lo menos un cargo para crear la nota de debito",
+                    icon: "error",
+                                       
+                });
+                return;
+            }
+            let extraFormData = new FormData(extraForm);
+            let data = {
+                fecha: document.getElementById("fecha").value,
+                cargos: [],
+                ...Object.fromEntries(extraFormData)
+                
+            };
+            let table = document.getElementById("cargos_table").getElementsByTagName('tbody')[0];
+            for (let i = 0; i < table.rows.length; i++) {
+                data.cargos.push({
+                    concepto: table.rows[i].cells[0].textContent,
+                    valor: parseFloat(table.rows[i].cells[1].textContent)
+                });
+            }
+            console.log(data);
+            //using fetch to send data to server
+            let response = await fetch("/NotaDebito/Create/" + factura_id , {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            //if response is ok, redirecto to admin/notadebito/detail {id} (returned from server)
+            let res = await response.json();
+            if (response.ok) {
+                window.location.href = `/NotaDebito/Details/${res.id}`;
+            } else {
+                let resModal = await swal({
+                    title: "Error",
+                    text: "Error al guardar la nota de debito: " +  res.error.message,
+                    icon: "error",
+                });
+            }
+        }
+      
     </script>
 }
 

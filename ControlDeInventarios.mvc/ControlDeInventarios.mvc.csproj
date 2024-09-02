@@ -714,6 +714,7 @@
     <Content Include="Views\ContabilidadPartidas\Details.cshtml" />
     <Content Include="Views\NotaDebito\Index.cshtml" />
     <Content Include="Views\NotaDebito\Create.cshtml" />
+    <Content Include="Views\NotaDebito\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

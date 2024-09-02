@@ -22,6 +22,8 @@ namespace ControlDeInventarios.entities
 
         public decimal total { get; set; }
 
+        public string observaciones { get; set; }
+
 
     }
 }
