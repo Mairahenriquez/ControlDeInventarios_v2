@@ -156,5 +156,18 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     @RenderSection("scripts", required: false)
+
+    <script>
+        try {
+
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        }
+        catch {
+
+        }
+    </script>
 </body>
 </html>

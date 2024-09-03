@@ -24,6 +24,8 @@ namespace ControlDeInventarios.entities
 
         public string observaciones { get; set; }
 
+        public int anulada { get; set; }
 
+        public DateTime? fecha_anulacion { get; set; }
     }
 }

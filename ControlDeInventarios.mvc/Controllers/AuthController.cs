@@ -130,7 +130,7 @@ namespace ControlDeInventarios.mvc.Controllers
                 }
             } catch (Exception e)
             {
-                TempData["error_login"] = "Error al iniciar sesión." + e.Data.ToString() ;
+                TempData["error_login"] = "Error al iniciar sesión." + e.Message ;
                 return RedirectToAction("Login", "Auth");
             }
             TempData["error_login"] = "Datos incorrectos.";
