@@ -500,6 +500,7 @@
     <Compile Include="Controllers\InventariosMovimientosController.cs" />
     <Compile Include="Controllers\KardexAgotadoController.cs" />
     <Compile Include="Controllers\KardexVentasController.cs" />
+    <Compile Include="Controllers\NotaDebitoController.cs" />
     <Compile Include="Controllers\ProveedoresComprasController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\ProveedoresOrdenesComprasController.cs" />
@@ -653,6 +654,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include=".gitignore" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -710,6 +712,9 @@
     <Content Include="Views\KardexAgotado\Index.cshtml" />
     <Content Include="Views\ContabilidadPartidas\Index.cshtml" />
     <Content Include="Views\ContabilidadPartidas\Details.cshtml" />
+    <Content Include="Views\NotaDebito\Index.cshtml" />
+    <Content Include="Views\NotaDebito\Create.cshtml" />
+    <Content Include="Views\NotaDebito\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

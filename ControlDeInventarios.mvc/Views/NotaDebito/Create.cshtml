@@ -1,0 +1,184 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+
+    <h3 style="margin-top:5rem;">Crear nota de debito de factura N° @ViewBag.factura.numero</h3>
+    <form class="form needs-validation" method="post">
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-12 mb-2">
+                <label class="form-label">Fecha </label>
+                <input id="fecha" name="fecha" type="date" disabled readonly value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-center" required>
+                <div class="invalid-feedback">Requerido</div>
+            </div>
+        </div>
+    </form>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+       Agregar cargo
+    </button>
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form class="modal-dialog" onsubmit="onAddCargo(event)" id="cargoForm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-12">
+                        <label class="form-label">Concepto *</label>
+                        <input class="form-control" name="concepto" required />
+                    </div>
+                   <!-- only currency format-->
+                    <div class="col-12">
+                        <label class="form-label">Valor *</label>
+                        <input class="form-control" name="valor" type="number" step="0.01" pattern="\d+(\.\d{1,2})?" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table" id="cargos_table">
+        <caption style=" caption-side: top;">Cargos a aplicar a la factura</caption>
+        <thead>
+            <tr>
+                <th>Concepto del cargo</th>
+                <th>Valor</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Total</td>
+                <td style="text-align:right;" id="total_td">0</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    <form id="_form">
+               <div class="row">
+                   <div class="col-12">
+                       <label>Comentario * </label>
+                       <textarea class="form-control" name="comentario" required></textarea>
+                   </div>
+               </div>
+    </form>
+</div>
+
+<!-- Modal -->
+
+
+
+@section botones{
+    <a href="/ClientesFacturacion" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Atrás</span></a>
+    <a href="~/InventariosMovimientos/Index" class="btn btn-outline-primary"><i class="fas fa-times"></i><span class="d-none d-sm-inline"> Cancelar</span></a>
+    <button type="button" onclick="javascript:Guardar();" class="btn btn-primary"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Guardar</span></button>
+}
+
+@section scripts{
+    <script>
+        let extraForm = document.getElementById("_form");
+        let cargoForm = document.getElementById("cargoForm");
+
+        let modal = (document.getElementById("myModal"));
+        let totalCargos = 0;
+        let factura_id = "@ViewBag.factura.PK_codigo";
+        function onAddCargo(event){
+            event.preventDefault();
+            if (!cargoForm.checkValidity()) return;
+            let data = {};
+            for (const pair of (new FormData(cargoForm)).entries()) {
+                data[pair[0]]= pair[1];
+            }
+            console.log(data)
+            //create a new row with data
+            let table = document.getElementById("cargos_table").getElementsByTagName('tbody')[0];
+            let newRow = table.insertRow();
+            let cell1 = newRow.insertCell(0);
+            let cell2 = newRow.insertCell(1);
+            cell2.classList.add("text-end");
+            let cell3 = newRow.insertCell(2);
+
+            cell1.textContent = data["concepto"];
+            cell2.textContent = parseFloat(data["valor"]).toFixed(2);
+            cell3.innerHTML = `<button type="button" class="btn btn-danger" onclick="onDeleteRow(this)">Eliminar</button>`;
+
+            modal.querySelector(".btn-close").click();
+           
+            cargoForm.reset();
+            updateTotalCargos();
+        }
+        function onDeleteRow(btn){
+            let row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            updateTotalCargos();
+        }
+        function updateTotalCargos() {
+            let total = 0;
+            let table = document.getElementById("cargos_table").getElementsByTagName('tbody')[0];
+            for (let i = 0; i < table.rows.length; i++) {
+                total += parseFloat(table.rows[i].cells[1].textContent);
+            }
+            document.getElementById("total_td").textContent = total.toFixed(2);
+
+            totalCargos = total;
+        }
+
+        async function Guardar() {
+            if (!extraForm.reportValidity()) return;
+            if (totalCargos <= 0 ) {
+                let res = await swal({
+                    title:"Tienes un error en tus datos",
+                    text:  "Debes introducir por lo menos un cargo para crear la nota de debito",
+                    icon: "error",
+                                       
+                });
+                return;
+            }
+            let extraFormData = new FormData(extraForm);
+            let data = {
+                fecha: document.getElementById("fecha").value,
+                cargos: [],
+                ...Object.fromEntries(extraFormData)
+                
+            };
+            let table = document.getElementById("cargos_table").getElementsByTagName('tbody')[0];
+            for (let i = 0; i < table.rows.length; i++) {
+                data.cargos.push({
+                    concepto: table.rows[i].cells[0].textContent,
+                    valor: parseFloat(table.rows[i].cells[1].textContent)
+                });
+            }
+            console.log(data);
+            //using fetch to send data to server
+            let response = await fetch("/NotaDebito/Create/" + factura_id , {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            //if response is ok, redirecto to admin/notadebito/detail {id} (returned from server)
+            let res = await response.json();
+            if (response.ok) {
+                window.location.href = `/NotaDebito/Details/${res.id}`;
+            } else {
+                let resModal = await swal({
+                    title: "Error",
+                    text: "Error al guardar la nota de debito: " +  res.error.message,
+                    icon: "error",
+                });
+            }
+        }
+      
+    </script>
+}
+
+

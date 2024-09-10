@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ControlDeInventarios.mvc.Controllers.NotaDebitoDTO>
+@{
+    ViewBag.Title = "index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-5">
+    <h2>
+        Notas de debito
+    </h2>
+    <table class="table table-striped" id="tableNotas">
+        <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Factura</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Valor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--Iterate Viewbag.notas-->
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.numero</td>
+                    <td>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" href="/ClientesFacturacion/Details/@item.id_factura" title="Ver factura">
+                            @item.id_factura
+                           </a>
+
+                    </td>
+                    <td>@item.fecha_hora.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        @if (item.anulada != 1)
+                        {
+                            <span class="badge bg-success">
+                                Vigente
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning">
+                                Anulada
+                            </span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        $ @item.total
+                    </td>
+                    <td>
+                        <a href="/NotaDebito/Details/@item.PK_codigo">
+                            Ver detalle
+                        </a>
+                        </td>
+                </tr>
+             }
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            
+            new DataTable('#tableNotas', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+    }
+

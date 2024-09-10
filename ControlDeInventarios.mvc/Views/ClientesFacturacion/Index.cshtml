@@ -27,6 +27,7 @@
                         <th class="text-center" scope="col">Iva</th>
                         <th class="text-center" scope="col">Total</th>
                         <th class="text-center" scope="col">Estado</th>
+                        <th class="text-center" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,6 +44,14 @@
                             <td>
                                 <label style="color:@_facturas.estado_color"><i class="fa fa-circle"></i></label>
                                 <label>@_facturas.estado</label>
+                            </td>
+                            <td>
+                                
+                               <!-- 4 es finalizado -->
+                                @if(_facturas.FK_estado == 2)
+                                {
+                                    <a href="/Admin/NotaDebito/Create/@_facturas.PK_codigo" class="btn btn-outline-primary" title="Agregar nota de debito"><i class="bi bi-file-earmark-plus"></i></a>
+                                }
                             </td>
                         </tr>
                     }
