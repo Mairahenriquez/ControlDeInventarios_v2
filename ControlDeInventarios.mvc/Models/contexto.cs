@@ -13,6 +13,10 @@ namespace ControlDeInventarios.mvc.Models
         {
 
         }
+        public DbSet<vw_tesoreria_bancos> vw_tesoreria_bancos { get; set; }
+        public DbSet<vw_tesoreria_notas_partidas> vw_tesoreria_notas_partidas { get; set; }
+        public DbSet<vw_tesoreria_notas_facturas> vw_tesoreria_notas_facturas { get; set; }
+        public DbSet<vw_tesoreria_notas> vw_tesoreria_notas { get; set; }
         public DbSet<bitacoras> bitacoras { get; set; }
         public DbSet<contabilidad_cuentas_contables> contabilidad_cuentas_contables { get; set; }
         public DbSet<vw_contabilidad_cuentas_contables> vw_contabilidad_cuentas_contables { get; set; }

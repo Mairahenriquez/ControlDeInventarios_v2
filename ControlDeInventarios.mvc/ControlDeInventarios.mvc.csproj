@@ -501,6 +501,7 @@
     <Compile Include="Controllers\KardexAgotadoController.cs" />
     <Compile Include="Controllers\KardexVentasController.cs" />
     <Compile Include="Controllers\NotaDebitoController.cs" />
+    <Compile Include="Controllers\NotaCreditoController.cs" />
     <Compile Include="Controllers\ProveedoresComprasController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\ProveedoresOrdenesComprasController.cs" />
@@ -715,6 +716,11 @@
     <Content Include="Views\NotaDebito\Index.cshtml" />
     <Content Include="Views\NotaDebito\Create.cshtml" />
     <Content Include="Views\NotaDebito\Details.cshtml" />
+    <Content Include="Views\NotaCredito\Index.cshtml" />
+    <Content Include="Views\NotaCredito\Details.cshtml" />
+    <Content Include="Views\NotaCredito\Create.cshtml" />
+    <Content Include="Views\NotaCredito\Edit.cshtml" />
+    <Content Include="Views\NotaCredito\_Modal_Facturas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

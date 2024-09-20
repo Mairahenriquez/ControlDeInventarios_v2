@@ -16,6 +16,37 @@ namespace ControlDeInventarios.mvc.Controllers
         {
             return View();
         }
+        
+        public ActionResult SelectCuentaCorriente(string terms)
+        {
+            try
+            {
+                List<vw_tesoreria_bancos> dato = new List<vw_tesoreria_bancos>();
+                if (terms != null && terms != "")
+                {
+                    //Busqueda por texto de entrada.
+                    dato = db.vw_tesoreria_bancos.Where(m => m.nombre.Contains(terms)).OrderBy(y => y.nombre).Take(5).ToList();
+                }
+                else
+                {
+                    //Busqueda por texto de entrada.
+                    dato = db.vw_tesoreria_bancos.OrderBy(y => y.nombre).Take(5).ToList();
+                }
+                //Creación de objeto para para mostrar datos.
+                var modificarData = dato.Select(x => new
+                {
+                    id = x.PK_codigo,
+                    x.nombre,
+                    text = $"{x.nombre}"
+                });
+                //Retorno de datos como json.
+                return Json(modificarData, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         public ActionResult SelectMunicipio(string terms)
         {
