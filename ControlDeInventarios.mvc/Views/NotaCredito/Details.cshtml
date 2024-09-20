@@ -1,0 +1,252 @@
+﻿@model ControlDeInventarios.entities.vw_tesoreria_notas
+@{
+    ViewBag.Title = "Notas de Crédito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _detalles = ViewBag._detalles;
+    var _partidas = ViewBag._partidas;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Nota de Crédito # @Model.PK_codigo </h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cuenta corriente:</label><br />
+            <label class="form-label bold">@Model.cuenta_corriente</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha:</label><br />
+            <label class="form-label bold">@Model.fecha.ToString("dd/MM/yyyy")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Referencia:</label><br />
+            <label class="form-label bold">@Model.referencia</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Descripción:</label><br />
+            <label class="form-label bold">@Model.descripcion</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Monto: </label><br />
+            <label class="form-label bold">@Model.monto.ToString("C2")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones: </label><br />
+            <label class="form-label bold">@Model.observaciones</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label>Estado:</label><br />
+            <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
+            <label class="form-label bold">@Model.estado</label>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#Detalle">FACTURAS DE VENTA</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#Facturas">CUENTAS CONTABLES</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12">
+            <div class="tab-content">
+                <!-- Tab panes Detalle -->
+                <div class="tab-pane container active" id="Detalle">
+                    <table class="table table-bordered" id="myTable_Detalle">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">N° documento</th>
+                                <th class="text-center" scope="col">Cliente</th>
+                                <th class="text-center" scope="col">Saldo</th>
+                                <th class="text-center" scope="col">Monto a abonar</th>
+                                @if (Model.FK_estado == 1)
+                                {
+                                    <th class="text-center" scope="col">Opciones</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _a in _detalles)
+                            {
+                                <tr>
+                                    <th class="text-center" scope="row"><a href="/ClientesFacturacion/Details/@_a.PK_codigo">@_a.PK_codigo</a></th>
+                                    <td>@_a.cliente</td>
+                                    <td class="text-end">@_a.saldo.ToString("N2")</td>
+                                    <td class="text-end">@_a.monto.ToString("C2")</td>
+                                    @if (Model.FK_estado == 1)
+                                    {
+                                        <td class="text-center">
+                                            <a href="/NotaCredito/Delete/@_a.PK_codigo"><i class="fa-solid fa-trash-can"></i></a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Tab panes Cuentas Contables -->
+                <div class="tab-pane container fade" id="Facturas">
+                    <table class="table table-bordered" id="myTable_Cuentas">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">N°</th>
+                                <th class="text-center" scope="col">Cuenta</th>
+                                <th class="text-center" scope="col">Concepto</th>
+                                <th class="text-center" scope="col">Cargo</th>
+                                <th class="text-center" scope="col">Abono</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _b in _partidas)
+                            {
+                                <tr>
+                                    <th class="text-center" scope="row"><a href="/NotaCredito/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
+                                    <td>@_b.cuen</td>
+                                    <td>@_b.concepto</td>
+                                    <td class="text-end">@_b.subtotal.ToString("C2")</td>
+                                    <td class="text-end">@_b.iva.ToString("C2")</td>
+                                    <td class="text-end">@_b.total.ToString("C2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="/NotaCredito/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Notas de Crédito</span></a>
+    <a href="~/NotaCredito/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+    <a href="~/NotaCredito/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Opciones
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.FK_estado == 1)
+            {
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Procesar,'¿Desea procesar la Nota de Crédito?');"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>
+                <li><a href="#" class="dropdown-item" onclick="AbrirModalFacturas();"><i class="fa-solid fa-circle-check"></i> Agregar facturas</a> </li>
+            }
+        </ul>
+    </div>
+}
+
+<!-- Modal agregar producto IME -->
+<div class="modal fade" id="modal_agregar_facturas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" id="modal_agregar_facturas_dialog">
+
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        //Validación bootstrap.
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Detalle');
+        });
+
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Cuentas');
+        });
+
+        //Abrir vista parcial.
+        function AbrirModalFacturas() {
+            //Obtiene la vista parcial.
+            $.ajax({
+                url: "@Url.Action("_Modal_Facturas", "NotaCredito", new { id = @Model.PK_codigo }) ",
+                method: "POST",
+                contentType: "application/json",
+                dataType: "html"
+            }).done(function (r) {
+                $("#modal_agregar_facturas_dialog").html(r);
+            });
+            //Muestra el modal.
+            $('#modal_agregar_facturas').modal('show');
+        }
+
+        //Validar datos del producto.
+        function ValidarDatos() {
+            var id = document.getElementById("txt_FK_inventario").value; //le pone lo que esta en el modal.
+            var cantidad = document.getElementById("txt_cantidad").value; //le pone lo que esta en el modal.
+
+            //Carga los datos del registro a editar;
+            var value = {
+                id: id
+            }
+
+            //Hace la peticion AJAX para guardar registro.
+            $.ajax({
+                url: '/ClientesPedidos/ValidarDatos',
+                type: "POST",
+                data: JSON.stringify(value),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //Actualizar datos del modal.
+                    if (data != null) {
+                        var precio = data.precio_unitario;
+                        var cant = data.existencia_fisica;
+                        $("#txt_costo_unitario").val(precio.toFixed(2));
+                        if (data.existencia_fisica < cantidad) {
+                            $("#txt_cantidad").val(cant.toFixed(2));
+                        }
+                    }
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+        //Activar.
+        function Procesar() {
+            $.ajax({
+                type: "GET",
+                url: "../../ClientesPedidos/Procesar?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+
+    </script>
+}

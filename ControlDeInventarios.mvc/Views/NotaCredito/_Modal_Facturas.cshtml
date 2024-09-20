@@ -1,0 +1,77 @@
+﻿@model ControlDeInventarios.entities.vw_tesoreria_notas
+@{
+    var _facturas = ViewBag._facturas;
+}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Seleccionar Facturas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <table class="table table-bordered" id="myTable_Facturas">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Cliente</th>
+                        <th class="text-center" scope="col">Fecha</th>
+                        <th class="text-center" scope="col">Saldo</th>
+                        <th class="text-center" scope="col">Total</th>
+                        <th class="text-center" scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _b in _facturas)
+                    {
+                    <tr>
+                        <th class="text-center" scope="row"><a href="/NotaCredito/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
+                        <td>@_b.cliente</td>
+                        <td>@_b.fecha.ToString("dd-MM-yyyy")</td>
+                        <td class="text-end">@_b.saldo.ToString("C2")</td>
+                        <td class="text-end">@_b.total.ToString("C2")</td>
+                        <td class="text-center">
+                            <a href="#!" class="btn btn-outline-primary" onclick="AgregarFactura(@_b.PK_codigo);" title="Agregar nota de debito"><i class="fas fa-plus"></i></a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        let table = new DataTable('#myTable_Facturas');
+    });
+
+    //Agregar producto.
+    function AgregarFactura(id) {
+        //Carga los datos del registro.
+        var value = {
+            FK_tesoreria_nota: @Model.PK_codigo,
+            FK_factura: id
+        }
+        //Hace la peticion AJAX para guardar registro.
+        $.ajax({
+            url: '/NotaCredito/Insert',
+            type: "POST",
+            data: JSON.stringify(value),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                //Actualizar pagina.
+                location.reload();
+            },
+            error: function (response) {
+
+            }
+        });
+    }
+
+</script>

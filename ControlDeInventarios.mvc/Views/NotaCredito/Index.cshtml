@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_tesoreria_notas>
+@{
+    ViewBag.Title = "Notas de Crédito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Notas de Credito</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Cuenta corriente</th>
+                        <th class="text-center" scope="col">Fecha</th>
+                        <th class="text-center" scope="col">Referencia</th>
+                        <th class="text-center" scope="col">Descripción</th>
+                        <th class="text-center" scope="col">Monto</th>
+                        <th class="text-center" scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _registro in Model)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row"><a href="/NotaCredito/Details/@_registro.PK_codigo">@_registro.PK_codigo</a></th>
+                            <td>@_registro.cuenta_corriente</td>
+                            <td class="text-end">@_registro.fecha.ToString("yyyy-MM-dd")</td>
+                            <td>@_registro.referencia</td>
+                            <td>@_registro.descripcion</td>
+                            <td class="text-end">@_registro.monto.ToString("C2")</td>
+                            <td>
+                                <label style="color:@_registro.estado_color"><i class="fa fa-circle"></i></label>
+                                <label>@_registro.estado</label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="~/NotaCredito/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nueva</span></a>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+}
