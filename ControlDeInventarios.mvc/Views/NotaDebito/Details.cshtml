@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var dateFormated = ((DateTime)ViewBag.nota.fecha_hora).ToString("dd/MM/yyyy HH:mm");
+
+}
+
+
+
+<div class="container mt-5">
+
+    <h2>Detalle de nota de crédito</h2>
+    @if (ViewBag.nota.anulada == 1)
+    {
+        <div class="alert alert-danger mb-2" role="alert">
+            Esta nota de debito ha sido anulada
+        </div>
+    }
+    <div class="row">
+        <div class="col-12">
+            <label>Fecha</label>
+            <!--input with format fecha_hora (date time )from ViewBag.nota to date (dd/MM/YYY)-->
+
+            <input type="text" value='@dateFormated' class="form-control" readonly disabled>
+        </div>
+        <div class="col-12">
+            <label>Observacion del documento</label>
+            <textarea class="form-control" readonly disabled>@ViewBag.nota.observaciones </textarea>
+        </div>
+    </div>
+    <!-- Table detalles (concepto, total) -->
+    <table class="table table-striped border rounded rounded-1 mt-2">
+        <thead>
+            <tr>
+                <th>Concepto</th>
+                <th class="text-end">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in ViewBag.detalle)
+            {
+                <tr>
+                    <td>@item.concepto</td>
+                    <td class="text-end">$ @item.total</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <strong>Total: </strong>
+                </td>
+                <td class="text-end">
+                    <strong>$ @ViewBag.nota.total</strong>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</div>
+
+
+@section botones{
+    <a href="/NotaDebito" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Notas de débito</span></a>
+    @if (ViewBag.nota.anulada!=1)
+    {
+        <button type="button" onclick="Anular();" class="btn btn-danger"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Anular</span></button>
+    }
+}
+@section scripts{
+    <script>
+        let notaId = @ViewBag.nota.PK_codigo;
+        async function Anular() {
+            let confirm = await swal({
+                title: "¿Está seguro de anular la nota de débito?",
+                text: "Una vez anulada no se podrá recuperar",
+                icon: "warning",
+                buttons: ["Cancelar", "Anular"],
+                dangerMode: true,
+            });
+            if (!confirm) return;
+            let response = await fetch(`/NotaDebito/Anular/${notaId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            let jsonRes = await response.json();
+            if (jsonRes.success) {
+                swal({
+                    title: "Nota de débito anulada",
+                    icon: "success",
+                    text: jsonRes.message
+                }).then(() => {
+                    window.location.href = "/NotaDebito";
+                });
+            } else {
+                swal({
+                        title: "Error al anular la nota de débito",
+                        icon: "error",
+                        text: jsonRes.message
+                    });
+            }
+        }
+    </script>
+}

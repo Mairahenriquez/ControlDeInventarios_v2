@@ -495,6 +495,7 @@
     <Compile Include="Controllers\ClientesPedidosController.cs" />
     <Compile Include="Controllers\ContabilidadCuentasContablesController.cs" />
     <Compile Include="Controllers\ContabilidadPartidasController.cs" />
+    <Compile Include="Controllers\DevolucionesComprasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventariosController.cs" />
     <Compile Include="Controllers\InventariosMovimientosController.cs" />
@@ -721,6 +722,7 @@
     <Content Include="Views\NotaCredito\Create.cshtml" />
     <Content Include="Views\NotaCredito\Edit.cshtml" />
     <Content Include="Views\NotaCredito\_Modal_Facturas.cshtml" />
+    <Content Include="Views\DevolucionesCompras\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
