@@ -611,6 +611,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="nuevas_tablas.sql" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="css\assets\vendor\aos\aos.js.map" />
@@ -723,6 +724,8 @@
     <Content Include="Views\NotaCredito\Edit.cshtml" />
     <Content Include="Views\NotaCredito\_Modal_Facturas.cshtml" />
     <Content Include="Views\DevolucionesCompras\Index.cshtml" />
+    <Content Include="Views\DevolucionesCompras\Create.cshtml" />
+    <Content Include="Views\DevolucionesCompras\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

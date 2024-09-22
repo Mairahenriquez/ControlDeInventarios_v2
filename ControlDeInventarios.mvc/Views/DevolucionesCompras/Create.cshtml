@@ -1,0 +1,302 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mt-4">Create</h2>
+
+<form class="modal-content needs-validation" novalidate id="_form" onsubmit="event.preventDefault()">
+    <div class="row">
+        <div class=" col-md-3 mb-2">
+            <label class="form-label">Numero de compra *</label>
+            <input id="numero_compra_control" name="numero_compra" class="form-control" required placeholder="Ingresa un numero de compra">
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-md-1">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary mt-4" onclick="SearchCompra()"><i class="bi bi-search"></i> </button>
+        </div>
+        <div class="col-md-1"  data-bs-toggle="tooltip" data-bs-title="Reset">
+            <label></label>
+            <button class="btn btn-danger mt-4" onclick="resetCompra()" ><i class="bi bi-x"></i> </button>
+
+        </div>
+    </div>
+    <section id="detalles_section" class="d-none">
+        <!-- Detalles de la compra-->
+        <div class="row" id="form_detalle_compra">
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Fecha</label>
+                <input type="text" name="fecha" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Documento</label>
+                <input type="text" name="documento" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Proveedor</label>
+                <input type="text" name="proveedor" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Subtotal</label>
+                <input type="text" name="subtotal" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>IVA</label>
+                <input type="text" name="iva" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Total</label>
+                <input type="text" name="total" class="form-control" disabled>
+            </div>
+
+
+        </div>
+        <table class="table table-striped table-borderless mt-2">
+            <legend>Detalles de la compra</legend>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+
+                    <th>Subtotal</th>
+                    <th>IVA</th>
+                    <th>Total</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+        </table>
+        <div class="form-group">
+            <label>Motivo de devolucion *</label>
+            <textarea class="form-control" name="motivo" required></textarea>
+        </div>
+    </section>
+  
+</form>
+
+@section botones{
+    <a href="/DevolucionesCompras/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Devoluciones de Compras</span></a>
+    <a href="/DevolucionesCompras/Index" class="btn btn-outline-primary"><i class="fas fa-times"></i><span class="d-none d-sm-inline"> Cancelar</span></a>
+    <button type="button" onclick="Guardar()" class="btn btn-primary"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Guardar</span></button>
+}
+
+@section scripts{
+    <script defer>
+
+        /*
+        Ejemplo compra
+        {
+    "compra": {
+        "PK_codigo": 1,
+        "fecha": "\/Date(1718949600000)\/",
+        "documento": "Orden # 1",
+        "observaciones": "Orden # 1",
+        "subtotal": 230.00000000,
+        "iva": 29.90000000,
+        "descuento": 0.00000000,
+        "total": 259.90000000,
+        "abono": 0.00000000,
+        "saldo": 0.00000000,
+        "FK_forma_pago": 1,
+        "FK_orden_compra": 1,
+        "FK_partida": 1,
+        "FK_estado": 2,
+        "FK_usuario": 1,
+        "FK_proveedor": 2,
+        "FK_bodega": 1,
+        "FK_movimiento": 1,
+        "FK_condicion_pago": 1
+    },
+    "detalles": [
+        {
+            "PK_codigo": 1,
+            "descripcion": "Azucar (libra)",
+            "cantidad": 100.00000000,
+            "costo_unitario": 0.30000000,
+            "subtotal": 30.00000000,
+            "iva": 3.90000000,
+            "total": 33.90000000,
+            "FK_compra": 1,
+            "FK_inventario": 2,
+            "FK_bodega": 1,
+            "inventario_identificador": "KKAKS-558"
+        },
+        {
+            "PK_codigo": 2,
+            "descripcion": "Leche  (libra)",
+            "cantidad": 50.00000000,
+            "costo_unitario": 4.00000000,
+            "subtotal": 200.00000000,
+            "iva": 26.00000000,
+            "total": 226.00000000,
+            "FK_compra": 1,
+            "FK_inventario": 3,
+            "FK_bodega": 1,
+            "inventario_identificador": "288292-LQLEL"
+        }
+    ]
+}
+
+        */
+
+        let form = document.getElementById("_form");
+        let numero_compra_control = document.getElementById("numero_compra_control");
+        let compra = null;
+        let detalles_section = document.getElementById("detalles_section");
+        let form_detalle_compra = document.getElementById("form_detalle_compra");
+
+        async function Guardar() {
+            if (!form.reportValidity()) return;
+            let confirm = await swal({
+                title: "¿Estas seguro?",
+                text: "Se creara una devolucion de compra",
+                icon: "warning",
+                buttons: [
+                    'No! Cancelar',
+                    'Si, estoy seguro!'
+                ],
+                dangerMode: true,
+            });
+            if(!confirm) return;
+            let data = {
+                compra: compra.compra.PK_codigo,
+                motivo: form.querySelector("[name=motivo]").value
+            };
+
+            let response = await fetch("/DevolucionesCompras/Create", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            let res = await response.json();
+            if (!res.success) {
+                let resModal = await swal({
+                    title: "Error",
+                    text: res.error,
+                    icon: "error",
+                });
+                return;
+            }
+            let resModal = await swal({
+                title: "Exito",
+                text: "Devolucion de compra creada exitosamente",
+                icon: "success",
+            });
+            window.location.href = "/DevolucionesCompras/Index";
+        }
+        async function SearchCompra() {
+            if(!numero_compra_control.value){
+                return;
+            }
+
+            let response = await fetch("/DevolucionesCompras/SearchCompra/" + numero_compra_control.value, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                
+            });
+            //if response is ok, redirecto to admin/notadebito/detail {id} (returned from server)
+            let res = await response.json();
+            if (!res.success) {
+                
+                let resModal = await swal({
+                    title: "Error",
+                    text:  res.error,
+                    icon: "error",
+                });
+                return;
+            }
+
+            compra = res;
+            numero_compra_control.setAttribute("disabled",true);
+            renderCompra();
+
+        }
+        function renderCompra() {
+            detalles_section.classList.remove("d-none");
+            form_detalle_compra.querySelector("[name=fecha]").value = compra.fecha_compra;
+            form_detalle_compra.querySelector("[name=documento]").value = compra.compra.documento;
+            form_detalle_compra.querySelector("[name=proveedor]").value = compra.compra.proveedor;
+            form_detalle_compra.querySelector("[name=subtotal]").value = "$ " + compra.compra.subtotal.toFixed(2);
+            form_detalle_compra.querySelector("[name=iva]").value = "$ " + compra.compra.iva.toFixed(2);
+            form_detalle_compra.querySelector("[name=total]").value = "$ " + compra.compra.total.toFixed(2);
+
+
+            let table = detalles_section.querySelector("table");
+
+            let tbody = table.querySelector("tbody");
+            tbody.innerHTML = "";
+            totales = {
+                subtotal: 0,
+                iva: 0,
+                total: 0
+            };
+            compra.detalles.forEach(detalle => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${detalle.descripcion}</td>
+                <td class="text-end">${detalle.cantidad}</td>
+                
+                <td class="text-end">$ ${detalle.subtotal.toFixed(2)}</td>
+                <td class="text-end">$ ${detalle.iva.toFixed(2)}</td>
+                <td class="text-end">$ ${detalle.total.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+                totales.subtotal += detalle.subtotal;
+                totales.iva += detalle.iva;
+                totales.total += detalle.total;
+
+            });
+
+            let tfoot = table.querySelector("tfoot");
+            tfoot.innerHTML = `
+                <tr class="border border-top border-1">
+                    <td colspan="2" class="text-end">Totales</td>
+                    <td class="text-end">$ ${totales.subtotal.toFixed(2)}</td>
+                    <td class="text-end">$ ${totales.iva.toFixed(2)}</td>
+                    <td class="text-end">$ ${totales.total.toFixed(2)}</td>
+                 </tr>`;
+
+        }
+
+        async function resetCompra() {
+
+
+            if (!compra) {
+                numero_compra_control.value = "";
+                numero_compra_control.removeAttribute("disabled");
+                return;
+            }
+            let confirm = await swal({
+                title: "¿Estas seguro?",
+                text: "Se descartara cualquier avance del proceso",
+                icon: "warning",
+                buttons: [
+                    'No!',
+                    'Si, estoy seguro!'
+                ],
+                dangerMode: true,
+            });
+
+            if (!confirm) return;
+            numero_compra_control.value = "";
+            numero_compra_control.removeAttribute("disabled");
+            compra = null;
+            form_detalle_compra.querySelector("[name=fecha]").value = "";
+            form_detalle_compra.querySelector("[name=documento]").value = "";
+            form_detalle_compra.querySelector("[name=proveedor]").value = "";
+            form_detalle_compra.querySelector("[name=subtotal]").value = "";
+            form_detalle_compra.querySelector("[name=iva]").value = "";
+            form_detalle_compra.querySelector("[name=total]").value = "";
+            detalles_section.classList.add("d-none");
+
+
+        }
+    </script>
+}

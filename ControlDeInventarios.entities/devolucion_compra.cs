@@ -12,13 +12,14 @@ namespace ControlDeInventarios.entities
     public class devolucion_compra
     {
         [Key]
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PK_codigo { get; set; }
         public int FK_proveedores_compras { get; set; }
 
         public DateTime fecha { get; set; }
 
         public string observaciones { get; set; }
-
 
     }
 }
