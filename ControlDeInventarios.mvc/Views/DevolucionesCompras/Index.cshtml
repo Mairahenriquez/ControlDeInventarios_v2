@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<ControlDeInventarios.entities.devolucion_compra>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,4 +11,37 @@
             <hr />
         </div>
     </div>
+    <table class="table table-striped" id="tableNotas">
+        <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Numero de compra</th>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.PK_codigo</td>
+                    <td>@item.FK_proveedores_compras</td>
+                    <td>@item.fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="text-end">$ 0.00</td>
+                    <td>
+                        <a href="/DevolucionesCompras/Details/@item.PK_codigo">
+                            Ver detalle
+                        </a>
+                    </td>
+                 </tr>
+                 }
+        </tbody>
+    </table>
 </div>
+
+
+
+@section botones{
+    <a href="~/DevolucionesCompras/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nueva</span></a>
+}

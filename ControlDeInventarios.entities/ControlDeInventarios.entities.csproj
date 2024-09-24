@@ -53,6 +53,8 @@
   <ItemGroup>
     <Compile Include="bitacoras.cs" />
     <Compile Include="bodegas.cs" />
+    <Compile Include="devolucion_compra.cs" />
+    <Compile Include="devolucion_compra_detalle.cs" />
     <Compile Include="Enums\EstadoFacturacion.cs" />
     <Compile Include="nota_debito_detalle.cs" />
     <Compile Include="nota_debito.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="inventarios_movimientos_tipos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="proveedores_compras.cs" />
+    <Compile Include="proveedores_compras_detalles.cs" />
     <Compile Include="proveedores_ordenes_compras.cs" />
     <Compile Include="proveedores_ordenes_compras_detalle.cs" />
     <Compile Include="usuarios.cs" />
@@ -106,6 +109,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -63,5 +63,10 @@ namespace ControlDeInventarios.mvc.Models
 
         public DbSet<nota_debito> notas_debito{ get; set; }
         public DbSet<nota_debito_detalle> nota_debito_detalles{ get; set; }
+
+        public DbSet<devolucion_compra> devolucion_compra { get; set; }
+        public DbSet<devolucion_compra_detalle> devolucion_compra_detalles { get; set; }
+
+        public DbSet<proveedores_compras_detalle> proveedores_compras_detalles { get; set; }
     }
 }
