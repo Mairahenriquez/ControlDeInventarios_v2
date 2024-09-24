@@ -83,7 +83,7 @@
                             @foreach (var _a in _detalles)
                             {
                                 <tr>
-                                    <th class="text-center" scope="row"><a href="/ClientesFacturacion/Details/@_a.PK_codigo">@_a.PK_codigo</a></th>
+                                    <th class="text-center" scope="row"><a href="/ClientesFacturacion/Details/@_a.PK_codigo">@_a.FK_factura</a></th>
                                     <td>@_a.cliente</td>
                                     <td class="text-end">@_a.saldo.ToString("N2")</td>
                                     <td class="text-end">@_a.monto.ToString("C2")</td>

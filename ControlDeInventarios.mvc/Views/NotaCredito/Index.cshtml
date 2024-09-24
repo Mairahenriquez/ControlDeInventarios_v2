@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row tema">
         <div class="col-12 mt-4">
-            <h1 class="h3 mt-4 text-gray-800">Notas de Credito</h1>
+            <h1 class="h3 mt-4 text-gray-800">Notas de Crédito</h1>
             <hr />
         </div>
     </div>
@@ -20,8 +20,8 @@
                     <tr>
                         <th class="text-center" scope="col">N°</th>
                         <th class="text-center" scope="col">Cuenta corriente</th>
-                        <th class="text-center" scope="col">Fecha</th>
                         <th class="text-center" scope="col">Referencia</th>
+                        <th class="text-center" scope="col">Fecha</th>
                         <th class="text-center" scope="col">Descripción</th>
                         <th class="text-center" scope="col">Monto</th>
                         <th class="text-center" scope="col">Estado</th>
@@ -30,18 +30,18 @@
                 <tbody>
                     @foreach (var _registro in Model)
                     {
-                        <tr>
-                            <th class="text-center" scope="row"><a href="/NotaCredito/Details/@_registro.PK_codigo">@_registro.PK_codigo</a></th>
-                            <td>@_registro.cuenta_corriente</td>
-                            <td class="text-end">@_registro.fecha.ToString("yyyy-MM-dd")</td>
-                            <td>@_registro.referencia</td>
-                            <td>@_registro.descripcion</td>
-                            <td class="text-end">@_registro.monto.ToString("C2")</td>
-                            <td>
-                                <label style="color:@_registro.estado_color"><i class="fa fa-circle"></i></label>
-                                <label>@_registro.estado</label>
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="text-center" scope="row"><a href="/NotaCredito/Details/@_registro.PK_codigo">@_registro.PK_codigo</a></th>
+                        <td>@_registro.cuenta_corriente</td>
+                        <td>@_registro.referencia</td>
+                        <td class="text-end">@_registro.fecha.ToString("dd/MM/yyyy")</td>
+                        <td>@_registro.descripcion</td>
+                        <td class="text-end">@_registro.monto.ToString("C2")</td>
+                        <td>
+                            <label style="color:@_registro.estado_color"><i class="fa fa-circle"></i></label>
+                            <label>@_registro.estado</label>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
