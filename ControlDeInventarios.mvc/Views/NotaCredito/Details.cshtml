@@ -90,6 +90,7 @@
                                     @if (Model.FK_estado == 1)
                                     {
                                         <td class="text-center">
+                                            <a href="#!" onclick="AbrirModalEditarMontoFactura(@_a.PK_codigo);"><i class="fa-solid fa-pen-to-square"></i></a>
                                             <a href="/NotaCredito/Delete/@_a.PK_codigo"><i class="fa-solid fa-trash-can"></i></a>
                                         </td>
                                     }
@@ -148,9 +149,16 @@
     </div>
 }
 
-<!-- Modal agregar producto IME -->
+<!-- Modal agregar facturas -->
 <div class="modal fade" id="modal_agregar_facturas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" id="modal_agregar_facturas_dialog">
+
+    </div>
+</div>
+
+<!-- Modal editar monto -->
+<div class="modal fade" id="modal_editar_monto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" id="modal_editar_monto_dialog">
 
     </div>
 </div>
@@ -198,6 +206,27 @@
             $('#modal_agregar_facturas').modal('show');
         }
 
+        //Abrir vista parcial.
+        function AbrirModalEditarMontoFactura(codigo) {
+            //Carga los datos al objeto.
+            var value = {
+                id: @Model.PK_codigo,
+                codigo: codigo
+            }
+            //Obtiene la vista parcial.
+            $.ajax({
+                url: "@Url.Action("_Modal_Editar_Monto", "NotaCredito") ",
+                method: "POST",
+                data: JSON.stringify(value),
+                contentType: "application/json",
+                dataType: "html"
+            }).done(function (r) {
+                $("#modal_editar_monto_dialog").html(r);
+            });
+            //Muestra el modal.
+            $('#modal_editar_monto').modal('show');
+        }
+
         //Validar datos del producto.
         function ValidarDatos() {
             var id = document.getElementById("txt_FK_inventario").value; //le pone lo que esta en el modal.
@@ -236,7 +265,7 @@
         function Procesar() {
             $.ajax({
                 type: "GET",
-                url: "../../ClientesPedidos/Procesar?id=@Model.PK_codigo",
+                url: "../../NotaCredito/Procesar?id=@Model.PK_codigo",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 complete: function () {

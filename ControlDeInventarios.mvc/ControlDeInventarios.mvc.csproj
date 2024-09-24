@@ -723,6 +723,7 @@
     <Content Include="Views\NotaCredito\Edit.cshtml" />
     <Content Include="Views\NotaCredito\_Modal_Facturas.cshtml" />
     <Content Include="Views\DevolucionesCompras\Index.cshtml" />
+    <Content Include="Views\NotaCredito\_Modal_Editar_Monto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
