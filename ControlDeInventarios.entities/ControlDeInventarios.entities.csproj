@@ -93,6 +93,7 @@
     <Compile Include="vw_contabilidad_cuentas_contables.cs" />
     <Compile Include="vw_contabilidad_partidas.cs" />
     <Compile Include="vw_contabilidad_partidas_detalle.cs" />
+	<Compile Include="vw_devolucion_ventas.cs" />
     <Compile Include="vw_facturacion.cs" />
     <Compile Include="vw_facturacion_detalle.cs" />
     <Compile Include="vw_inventarios.cs" />
