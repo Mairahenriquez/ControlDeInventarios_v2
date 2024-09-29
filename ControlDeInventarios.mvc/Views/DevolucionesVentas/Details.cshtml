@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ControlDeInventarios.entities.devolucion_ventas _devolucion = ViewBag.devolucion;
+    List<ControlDeInventarios.mvc.Controllers.DevolucionVentasDetalleDTO> _detalles = ViewBag.detalles;
+    ControlDeInventarios.entities.clientes_pedidos _pedido = ViewBag.venta;
+}
+
+<h2 class="mt-4">Detalle de devolucion</h2>
+<div class="row">
+    <div class="col-md-3 mb-2">
+        <label class="form-label">Numero de devolucion</label>
+        <input class="form-control" disabled value="@_devolucion.PK_codigo">
+    </div>
+    <div class="col-md-3 mb-2">
+        <label class="form-label">Fecha devolucion</label>
+        <input class="form-control" disabled value="@_devolucion.fecha.ToString("dd/MM/yyyy")">
+    </div>
+    <div class="col-md-3 mb-2">
+        <label class="form-label">Numero de pedido <small class="ml-2 badge"><a href="/ClientesPedidos/Details/@_devolucion.FK_clientes_pedidos">Ver venta</a></small></label>
+        <input class="form-control" disabled value="@_devolucion.FK_clientes_pedidos">
+    </div>
+</div>
+<table class="table table-striped table-borderless">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+
+            <th>Subtotal</th>
+            <th>IVA</th>
+            <th>Total</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <!--2 decimal format-->
+        @foreach (var item in _detalles)
+        {
+            <tr>
+                <td>@item.producto</td>
+                <td class="text-end">@((int)item.cantidad)</td>
+                <td class="text-end">@item.subtotal.ToString("C2")</td>
+                <td class="text-end">@item.iva.ToString("C2")</td>
+                <td class="text-end">@item.total.ToString("C2")</td>
+            </tr>
+
+        }
+    </tbody>
+    <tfoot>
+        <tr class="border-top border-1">
+            <td colspan="2" class="text-end">
+                Total
+            </td>
+            <td class="text-end">
+                @_detalles.Sum(x => x.subtotal).ToString("C2")
+            </td>
+            <td class="text-end">
+                @_detalles.Sum(x => x.iva).ToString("C2")
+            </td>
+            <td class="text-end">
+                @_detalles.Sum(x => x.total).ToString("C2")
+            </td>
+
+        </tr>
+    </tfoot>
+</table>
+
+
+
