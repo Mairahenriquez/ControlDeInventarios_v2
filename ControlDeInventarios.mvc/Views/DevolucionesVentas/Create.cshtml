@@ -1,0 +1,308 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mt-4">Create</h2>
+
+<form class="modal-content needs-validation" novalidate id="_form" onsubmit="event.preventDefault()">
+    <div class="row">
+        <div class=" col-md-3 mb-2">
+            <label class="form-label">Numero de pedido *</label>
+            <input id="numero_pedido_control" name="numero_pedido" class="form-control" required placeholder="Ingresa un numero de pedido">
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-md-1">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary mt-4" onclick="SearchVenta()"><i class="bi bi-search"></i> </button>
+        </div>
+        <div class="col-md-1"  data-bs-toggle="tooltip" data-bs-title="Reset">
+            <label></label>
+            <button class="btn btn-danger mt-4" onclick="resetCompra()" ><i class="bi bi-x"></i> </button>
+
+        </div>
+    </div>
+    <section id="detalles_section" class="d-none">
+        <!-- Detalles de la pedido-->
+        <div class="row" id="form_detalle_pedido">
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Fecha</label>
+                <input type="text" name="fecha" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Documento</label>
+                <input type="text" name="referencia" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Proveedor</label>
+                <input type="text" name="cliente" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Subtotal</label>
+                <input type="text" name="subtotal" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>IVA</label>
+                <input type="text" name="iva" class="form-control" disabled>
+            </div>
+            <div class="form-group col-12 col-md-6 col-lg-4">
+                <label>Total</label>
+                <input type="text" name="total" class="form-control" disabled>
+            </div>
+
+
+        </div>
+        <table class="table table-striped table-borderless mt-2">
+            <legend>Detalles de la pedido</legend>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+
+                    <th>Subtotal</th>
+                    <th>IVA</th>
+                    <th>Total</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+        </table>
+        <div class="form-group">
+            <label>Motivo de devolucion *</label>
+            <textarea class="form-control" name="motivo" required></textarea>
+        </div>
+    </section>
+  
+</form>
+
+@section botones{
+    <a href="/DevolucionesVentas/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Devoluciones de Ventas</span></a>
+    <a href="/DevolucionesVentas/Index" class="btn btn-outline-primary"><i class="fas fa-times"></i><span class="d-none d-sm-inline"> Cancelar</span></a>
+    <button type="button" onclick="Guardar()" class="btn btn-primary"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Guardar</span></button>
+}
+
+@section scripts{
+    <script defer>
+
+        /*
+        Ejemplo pedido
+        {
+    "pedido": {
+        "PK_codigo": 1,
+        "fecha": "\/Date(1718949600000)\/",
+        "referencia": "Orden # 1",
+        "observaciones": "Orden # 1",
+        "subtotal": 230.00000000,
+        "iva": 29.90000000,
+        "descuento": 0.00000000,
+        "total": 259.90000000,
+        "abono": 0.00000000,
+        "saldo": 0.00000000,
+        "FK_forma_pago": 1,
+        "FK_orden_pedido": 1,
+        "FK_partida": 1,
+        "FK_estado": 2,
+        "FK_usuario": 1,
+        "FK_cliente": 2,
+        "FK_bodega": 1,
+        "FK_movimiento": 1,
+        "FK_condicion_pago": 1
+    },
+    "detalles": [
+        {
+            "PK_codigo": 1,
+            "descripcion": "Azucar (libra)",
+            "cantidad": 100.00000000,
+            "costo_unitario": 0.30000000,
+            "subtotal": 30.00000000,
+            "iva": 3.90000000,
+            "total": 33.90000000,
+            "FK_pedido": 1,
+            "FK_inventario": 2,
+            "FK_bodega": 1,
+            "inventario_identificador": "KKAKS-558"
+        },
+        {
+            "PK_codigo": 2,
+            "descripcion": "Leche  (libra)",
+            "cantidad": 50.00000000,
+            "costo_unitario": 4.00000000,
+            "subtotal": 200.00000000,
+            "iva": 26.00000000,
+            "total": 226.00000000,
+            "FK_pedido": 1,
+            "FK_inventario": 3,
+            "FK_bodega": 1,
+            "inventario_identificador": "288292-LQLEL"
+        }
+    ]
+}
+
+        */
+
+        let form = document.getElementById("_form");
+        let numero_pedido_control = document.getElementById("numero_pedido_control");
+        let pedido = null;
+        let detalles_section = document.getElementById("detalles_section");
+        let form_detalle_pedido = document.getElementById("form_detalle_pedido");
+
+        async function Guardar() {
+            if (!form.reportValidity()) return;
+            let confirm = await swal({
+                title: "¿Estas seguro?",
+                text: "Se creara una devolucion de pedido",
+                icon: "warning",
+                buttons: [
+                    'No! Cancelar',
+                    'Si, estoy seguro!'
+                ],
+                dangerMode: true,
+            });
+            if(!confirm) return;
+            let data = {
+                pedido: pedido.pedido.PK_codigo,
+                motivo: form.querySelector("[name=motivo]").value
+            };
+
+            let response = await fetch("/DevolucionesVentas/Create", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            let res = await response.json();
+            if (!res.success) {
+                let resModal = await swal({
+                    title: "Error",
+                    text: res.error,
+                    icon: "error",
+                });
+                return;
+            }
+            let resModal = await swal({
+                title: "Exito",
+                text: "Devolucion de pedido creada exitosamente",
+                icon: "success",
+            });
+            window.location.href = "/DevolucionesVentas/Index";
+        }
+        async function SearchVenta() {
+            if (!numero_pedido_control.value) {
+                swal({
+                    title: "Error",
+                    text: "Debe ingresar un numero de pedido",
+                    icon: "error",
+                });
+                return;
+            }
+
+            let response = await fetch("/DevolucionesVentas/SearchVenta/" + numero_pedido_control.value, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                
+            });
+            //if response is ok, redirecto to admin/notadebito/detail {id} (returned from server)
+            let res = await response.json();
+            if (!res.success) {
+                
+                let resModal = await swal({
+                    title: "Error",
+                    text:  res.error,
+                    icon: "error",
+                });
+                return;
+            }
+
+            pedido = res;
+            numero_pedido_control.setAttribute("disabled",true);
+            renderCompra();
+
+        }
+        function renderCompra() {
+            console.log(pedido)
+            detalles_section.classList.remove("d-none");
+            form_detalle_pedido.querySelector("[name=fecha]").value = pedido.fecha_pedido;
+            form_detalle_pedido.querySelector("[name=referencia]").value = pedido.pedido.referencia;
+            form_detalle_pedido.querySelector("[name=cliente]").value = pedido.pedido.cliente;
+            form_detalle_pedido.querySelector("[name=subtotal]").value = "$ " + pedido.pedido.subtotal.toFixed(2);
+            form_detalle_pedido.querySelector("[name=iva]").value = "$ " + pedido.pedido.iva.toFixed(2);
+            form_detalle_pedido.querySelector("[name=total]").value = "$ " + pedido.pedido.total.toFixed(2);
+
+
+            let table = detalles_section.querySelector("table");
+
+            let tbody = table.querySelector("tbody");
+            tbody.innerHTML = "";
+            totales = {
+                subtotal: 0,
+                iva: 0,
+                total: 0
+            };
+            pedido.detalles.forEach(detalle => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${detalle.descripcion}</td>
+                <td class="text-end">${detalle.cantidad}</td>
+                
+                <td class="text-end">$ ${detalle.subtotal.toFixed(2)}</td>
+                <td class="text-end">$ ${detalle.iva.toFixed(2)}</td>
+                <td class="text-end">$ ${detalle.total.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+                totales.subtotal += detalle.subtotal;
+                totales.iva += detalle.iva;
+                totales.total += detalle.total;
+
+            });
+
+            let tfoot = table.querySelector("tfoot");
+            tfoot.innerHTML = `
+                <tr class="border border-top border-1">
+                    <td colspan="2" class="text-end">Totales</td>
+                    <td class="text-end">$ ${totales.subtotal.toFixed(2)}</td>
+                    <td class="text-end">$ ${totales.iva.toFixed(2)}</td>
+                    <td class="text-end">$ ${totales.total.toFixed(2)}</td>
+                 </tr>`;
+
+        }
+
+        async function resetCompra() {
+
+
+            if (!pedido) {
+                numero_pedido_control.value = "";
+                numero_pedido_control.removeAttribute("disabled");
+                return;
+            }
+            let confirm = await swal({
+                title: "¿Estas seguro?",
+                text: "Se descartara cualquier avance del proceso",
+                icon: "warning",
+                buttons: [
+                    'No!',
+                    'Si, estoy seguro!'
+                ],
+                dangerMode: true,
+            });
+
+            if (!confirm) return;
+            numero_pedido_control.value = "";
+            numero_pedido_control.removeAttribute("disabled");
+            pedido = null;
+            form_detalle_pedido.querySelector("[name=fecha]").value = "";
+            form_detalle_pedido.querySelector("[name=referencia]").value = "";
+            form_detalle_pedido.querySelector("[name=cliente]").value = "";
+            form_detalle_pedido.querySelector("[name=subtotal]").value = "";
+            form_detalle_pedido.querySelector("[name=iva]").value = "";
+            form_detalle_pedido.querySelector("[name=total]").value = "";
+            detalles_section.classList.add("d-none");
+
+
+        }
+    </script>
+}

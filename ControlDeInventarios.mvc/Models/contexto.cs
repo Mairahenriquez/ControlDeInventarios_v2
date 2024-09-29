@@ -71,5 +71,6 @@ namespace ControlDeInventarios.mvc.Models
 
         public DbSet<devolucion_ventas> devolucion_ventas{ get; set; }
         public DbSet<devolucion_venta_detalle> devolucion_venta_detalle { get; set; }
+        public DbSet<vw_devolucion_ventas> vw_devolucion_ventas { get; set; }
     }
 }
