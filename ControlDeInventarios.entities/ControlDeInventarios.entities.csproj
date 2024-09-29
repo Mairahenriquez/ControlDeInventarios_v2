@@ -53,7 +53,9 @@
   <ItemGroup>
     <Compile Include="bitacoras.cs" />
     <Compile Include="bodegas.cs" />
+    <Compile Include="devolucion_ventas.cs" />
     <Compile Include="devolucion_compra.cs" />
+    <Compile Include="devolucion_venta_detalle.cs" />
     <Compile Include="devolucion_compra_detalle.cs" />
     <Compile Include="Enums\EstadoFacturacion.cs" />
     <Compile Include="nota_debito_detalle.cs" />
