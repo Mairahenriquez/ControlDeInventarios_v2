@@ -13,6 +13,7 @@
         </div>
     </div>
 </div>
+
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -26,8 +27,10 @@
                         <th class="text-center" scope="col">Subtotal</th>
                         <th class="text-center" scope="col">Iva</th>
                         <th class="text-center" scope="col">Total</th>
+                        <th class="text-center" scope="col">Saldo</th>
+                        <th class="text-center" scope="col">Abonos</th>
                         <th class="text-center" scope="col">Estado</th>
-                        <th class="text-center" scope="col">Acciones</th>
+                        <th class="text-center" scope="col">Ac.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,10 +40,12 @@
                             <th class="text-center" scope="row"><a href="/ClientesFacturacion/Details/@_facturas.PK_codigo">@_facturas.PK_codigo</a></th>
                             <td>@_facturas.concepto</td>
                             <td>@_facturas.cliente</td>
-                            <td>@_facturas.fecha.ToString("dd-MM-yyyy")</td>
+                            <td>@_facturas.fecha.ToString("dd/MM/yyyy")</td>
                             <td class="text-end">@_facturas.subtotal.ToString("C2")</td>
                             <td class="text-end">@_facturas.iva.ToString("C2")</td>
                             <td class="text-end">@_facturas.total.ToString("C2")</td>
+                            <td class="text-end">@_facturas.saldo.ToString("C2")</td>
+                            <td class="text-end">@_facturas.abonado.ToString("C2")</td>
                             <td>
                                 <label style="color:@_facturas.estado_color"><i class="fa fa-circle"></i></label>
                                 <label>@_facturas.estado</label>
