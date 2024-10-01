@@ -211,19 +211,19 @@ namespace ControlDeInventarios.mvc.Controllers
                 if (terms != null)
                 {
                     //Busqueda por texto de entrada.
-                    dato = db.formas_pagos.Where(m => m.nombre.Contains(terms)).OrderBy(y => y.nombre).Take(10).ToList();
+                    dato = db.formas_pagos.Where(m => m.nombre.Contains(terms) && m.activo == true).OrderBy(y => y.nombre).Take(10).ToList();
                 }
                 else
                 {
                     //Busqueda por texto de entrada.
-                    dato = db.formas_pagos.OrderBy(y => y.nombre).Take(10).ToList();
+                    dato = db.formas_pagos.Where(m => m.activo == true).OrderBy(y => y.nombre).Take(10).ToList();
                 }
                 //Creación de objeto para para mostrar datos.
                 var modificarData = dato.Select(x => new
                 {
                     id = x.PK_codigo,
                     x.nombre,
-                    text = $"{x.PK_codigo} - {x.nombre}"
+                    text = $"{x.nombre}"
                 });
                 //Retorno de datos como json.
                 return Json(modificarData, JsonRequestBehavior.AllowGet);

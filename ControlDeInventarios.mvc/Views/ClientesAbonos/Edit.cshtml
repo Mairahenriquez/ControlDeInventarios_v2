@@ -1,0 +1,104 @@
+﻿@model ControlDeInventarios.entities.vw_clientes_abonos
+@{
+    ViewBag.Title = "Abonos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Abonos # @Model.PK_codigo</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<form class="modal-content needs-validation" method="post" novalidate>
+    <div class="row">
+        <input id="PK_codigo" name="PK_codigo" type="text" value="@Model.PK_codigo" class="form-control" hidden>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha *</label>
+            <input id="fecha" name="fecha" type="date" value="@Model.fecha.ToString("yyyy-MM-dd")" class="form-control text-end" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Referencia *</label>
+            <input id="referencia" name="referencia" type="text" value="@Model.referencia" class="form-control" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Forma de pago *</label>
+            <select id="FK_forma_pago" name="FK_forma_pago" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Monto * </label>
+            <input id="monto" name="monto" type="number" value="@Model.monto.ToString("N2")" step="0.01" class="form-control text-end" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones </label>
+            <textarea id="observaciones" name="observaciones" type="text" class="form-control">@Model.observaciones</textarea>
+        </div>
+    </div>
+    <button type="submit" id="btnGuardar" class="btn btn-primary" hidden></button>
+</form>
+
+@section botones{
+    <a href="/ClientesAbonos/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Abonos</span></a>
+    <a href="~/ClientesAbonos/Details/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fas fa-times"></i><span class="d-none d-sm-inline"> Cancelar</span></a>
+    <button type="button" onclick="javascript:Guardar();" class="btn btn-primary"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Guardar</span></button>
+}
+
+@section scripts{
+    <script>
+
+        //VALIDACION BOOTSTRAP
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $("#FK_forma_pago").select2({
+            width: '100%',
+            placeholder: "Seleccione una opción",
+            allowClear: true,
+            theme: "bootstrap-5",
+            ajax: {
+                url: "../../Select2/SelectFormaPago",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        terms: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
+        //Muestra el valor seleccionado por defecto.
+        var $newOption2 = $("<option selected='selected'></option>").val('@Model.FK_forma_pago').text('@Html.Raw(@Model.forma_pago)');
+        $("#FK_forma_pago").append($newOption2).trigger('change');
+
+        function Guardar() {
+            $("#btnGuardar").trigger("click");
+        }
+
+    </script>
+}

@@ -83,6 +83,8 @@
     <Compile Include="password_reset.cs" />
     <Compile Include="usuarios_roles.cs" />
     <Compile Include="vw_bodegas_detalle.cs" />
+    <Compile Include="vw_clientes_abonos.cs" />
+    <Compile Include="vw_clientes_abonos_facturas.cs" />
     <Compile Include="vw_inventarios_existencias_por_bodegas.cs" />
     <Compile Include="vw_inventarios_kardex_ventas.cs" />
     <Compile Include="vw_inventarios_movimientos_detalle.cs" />
@@ -93,7 +95,7 @@
     <Compile Include="vw_contabilidad_cuentas_contables.cs" />
     <Compile Include="vw_contabilidad_partidas.cs" />
     <Compile Include="vw_contabilidad_partidas_detalle.cs" />
-	<Compile Include="vw_devolucion_ventas.cs" />
+    <Compile Include="vw_devolucion_ventas.cs" />
     <Compile Include="vw_facturacion.cs" />
     <Compile Include="vw_facturacion_detalle.cs" />
     <Compile Include="vw_inventarios.cs" />

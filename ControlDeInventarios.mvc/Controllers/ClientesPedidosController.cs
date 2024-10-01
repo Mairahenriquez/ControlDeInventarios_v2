@@ -346,6 +346,7 @@ namespace ControlDeInventarios.mvc.Controllers
                 if (_registro != null)
                 {
                     _registro.precio_unitario = _registro.precio_unitario == 0 ? (_registro.costo_unitario + (_registro.costo_unitario * (_registro.porcentaje_ganacia / 100))) : _registro.precio_unitario / 1.13m;
+                    
                     //Retorna hacia la pantalla de Detalle.
                     return Json(_registro);
                 }

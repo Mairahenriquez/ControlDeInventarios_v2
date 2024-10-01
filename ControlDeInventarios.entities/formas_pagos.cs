@@ -12,5 +12,6 @@ namespace ControlDeInventarios.entities
         [Key]
         public int PK_codigo { get; set; }
         public string nombre { get; set; }
+        public Boolean activo { get; set; }
     }
 }
