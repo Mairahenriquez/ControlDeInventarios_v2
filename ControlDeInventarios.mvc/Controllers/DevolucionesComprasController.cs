@@ -4,6 +4,8 @@ using ControlDeInventarios.mvc.Models;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 
@@ -11,6 +13,18 @@ using System.Web.Mvc;
 
 namespace ControlDeInventarios.mvc.Controllers
 {
+    public class devolucion_compra_dto
+    {
+      
+        public int PK_codigo { get; set; }
+        public int FK_proveedores_compras { get; set; }
+
+        public DateTime fecha { get; set; }
+
+        public string observaciones { get; set; }
+        public decimal total { get; set; }
+
+    }
     public class DevolucionCompraCreateDTO
     {
         public int compra { get; set; }
@@ -37,7 +51,8 @@ namespace ControlDeInventarios.mvc.Controllers
         // GET: DevolucionesCompras
         public ActionResult Index()
         {
-            var devoluciones = db.devolucion_compra.ToList();
+            var devolucionesSqlRaw = "select devolucion_compras.*,proveedores_compras.total as total from devolucion_compras inner join proveedores_compras on proveedores_compras.PK_codigo = devolucion_compras.FK_proveedores_compras "; 
+            var devoluciones = db.Database.SqlQuery<devolucion_compra_dto>(devolucionesSqlRaw).ToList();        
             return View(devoluciones);
         }
         public ActionResult Create([Microsoft.AspNetCore.Mvc.FromBody] DevolucionCompraCreateDTO devolucionRequest  )
