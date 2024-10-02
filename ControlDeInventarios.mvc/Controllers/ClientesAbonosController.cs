@@ -73,7 +73,7 @@ namespace ControlDeInventarios.mvc.Controllers
                                 cmd.Parameters.Add("@FK_factura", SqlDbType.Int).Value = (object)value.FK_factura ?? DBNull.Value;
                                 cmd.Parameters.Add("@FK_forma_pago", SqlDbType.Int).Value = value.FK_forma_pago;
                                 cmd.Parameters.Add("@FK_usuario", SqlDbType.Int).Value = 1;
-                                cmd.Parameters.Add("@FK_cuenta_corriente", SqlDbType.Int).Value = value.FK_cuenta_corriente;
+                                cmd.Parameters.Add("@FK_cuenta_corriente", SqlDbType.Int).Value = (object)value.FK_cuenta_corriente ?? DBNull.Value;
 
                                 SqlParameter RETURN_VALUE = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int);
                                 RETURN_VALUE.Direction = ParameterDirection.ReturnValue;

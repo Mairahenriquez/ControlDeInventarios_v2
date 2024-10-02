@@ -738,6 +738,7 @@
     <Content Include="Views\ClientesAbonos\Edit.cshtml" />
     <Content Include="Views\ClientesAbonos\_Modal_Facturas.cshtml" />
     <Content Include="Views\ClientesAbonos\_Modal_Editar_Monto.cshtml" />
+    <Content Include="Views\ClientesFacturacion\_Modal_Abonos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

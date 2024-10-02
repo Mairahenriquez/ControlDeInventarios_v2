@@ -5,6 +5,7 @@
     var _detalle = ViewBag._detalle;
     var _movimientos = ViewBag._movimientos;
     var _partidas = ViewBag._partidas;
+    var _abonos = ViewBag._abonos;
 }
 
 <div class="container">
@@ -15,6 +16,7 @@
         </div>
     </div>
 </div>
+
 <div class="container">
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
@@ -62,6 +64,9 @@
                     <a class="nav-link active" data-bs-toggle="tab" href="#Detalle">DETALLE PRODUCTOS</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#Abonos">ABONOS</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="tab" href="#Movimientos">MOVIMIENTO</a>
                 </li>
                 <li class="nav-item">
@@ -102,6 +107,44 @@
                     </table>
                 </div>
                 <!-- Tab panes Movimientos -->
+                <div class="tab-pane container fade" id="Abonos">
+                    <table class="table table-bordered" id="myTable_Abonos">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">Forma de Pago</th>
+                                <th class="text-center" scope="col">Fecha</th>
+                                <th class="text-center" scope="col">Referencia</th>
+                                <th class="text-center" scope="col">Monto</th>
+                                @if (Model.FK_estado == 1)
+                                {
+                                    <th class="text-center" scope="col">Opciones</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _ab in _abonos)
+                            {
+                            <tr>
+                                <td>@_ab.forma_pago</td>
+                                <td class="text-end">@_ab.fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@_ab.referencia</td>
+                                <td class="text-end">@_ab.monto.ToString("C2") </td>
+                                @if (Model.FK_estado == 1 && _ab.ingreso_manual == false)
+                                {
+                                    <td class="text-center">
+                                        <a href="/ClientesFacturacion/DeleteAbono/@_ab.PK_codigo"><i class="fa-solid fa-trash-can"></i></a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-center"></td>
+                                }
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Tab panes Movimientos -->
                 <div class="tab-pane container fade" id="Movimientos">
                     <table class="table table-bordered" id="myTable_Movimientos">
                         <thead>
@@ -118,18 +161,18 @@
                         <tbody>
                             @foreach (var _b in _movimientos)
                             {
-                            <tr>
-                                <th class="text-center" scope="row"><a href="/InventariosMovimientos/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
-                                <td class="text-end">@_b.fecha.ToString("dd/MM/yyyy")</td>
-                                <td>@_b.referencia</td>
-                                <td>@_b.bodega</td>
-                                <td>
-                                    <label style="color:@_b.estado_color"><i class="fa fa-circle"></i></label>
-                                    <label>@_b.estado</label>
-                                </td>
-                                <td class="text-end">@_b.costo_total.ToString("C2") </td>
-                                <td class="text-end">@_b.precio_total.ToString("C2")</td>
-                            </tr>
+                                <tr>
+                                    <th class="text-center" scope="row"><a href="/InventariosMovimientos/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
+                                    <td class="text-end">@_b.fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>@_b.referencia</td>
+                                    <td>@_b.bodega</td>
+                                    <td>
+                                        <label style="color:@_b.estado_color"><i class="fa fa-circle"></i></label>
+                                        <label>@_b.estado</label>
+                                    </td>
+                                    <td class="text-end">@_b.costo_total.ToString("C2") </td>
+                                    <td class="text-end">@_b.precio_total.ToString("C2")</td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -149,13 +192,13 @@
                         <tbody>
                             @foreach (var _c in _partidas)
                             {
-                            <tr>
-                                <th class="text-center" scope="row"><a href="/ContabilidadPartidas/Details/@_c.PK_codigo">@_c.PK_codigo</a></th>
-                                <td class="text-end">@_c.fecha.ToString("dd/MM/yyyy")</td>
-                                <td>@_c.concepto</td>
-                                <td class="text-end">@_c.cargos.ToString("C2")</td>
-                                <td class="text-end">@_c.abonos.ToString("C2")</td>
-                            </tr>
+                                <tr>
+                                    <th class="text-center" scope="row"><a href="/ContabilidadPartidas/Details/@_c.PK_codigo">@_c.PK_codigo</a></th>
+                                    <td class="text-end">@_c.fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>@_c.concepto</td>
+                                    <td class="text-end">@_c.cargos.ToString("C2")</td>
+                                    <td class="text-end">@_c.abonos.ToString("C2")</td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -177,6 +220,7 @@
                 @*<li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Procesar,'¿Desea procesar la factura?');"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>*@
                 <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_seleccionar_bodega"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>
                 <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Anular,'¿Desea anular la factura?');"><i class="fa-solid fa-circle-check"></i> Anular</a> </li>
+                <li><a href="#!" class="dropdown-item" onclick="AbrirModalAbonos();"><i class="fa-solid fa-plus"></i> Agregar Abono</a> </li>
             }
         </ul>
     </div>
@@ -205,6 +249,13 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Modal agregar abonos -->
+<div class="modal fade" id="modal_agregar_abonos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" id="modal_agregar_abonos_dialog">
+
     </div>
 </div>
 
@@ -240,9 +291,11 @@
             let table = new DataTable('#myTable_Partidas');
         });
 
-        //Procesar.
+        $(document).ready(function () {
+            let table = new DataTable('#myTable_Abonos');
+        });
 
-        //Agregar producto.
+        //Procesar.
         function Procesar() {
             var FK_bodega = document.getElementById("txt_FK_bodega").value; //le pone lo que esta en el modal.
 
@@ -283,6 +336,21 @@
                     //alert(response);
                 },
             });
+        }
+
+        //Abrir vista parcial de Abonos.
+        function AbrirModalAbonos() {
+            //Obtiene la vista parcial.
+            $.ajax({
+                url: "@Url.Action("_Modal_Abonos", "ClientesFacturacion", new { id = @Model.PK_codigo }) ",
+                method: "POST",
+                contentType: "application/json",
+                dataType: "html"
+            }).done(function (r) {
+                $("#modal_agregar_abonos_dialog").html(r);
+            });
+            //Muestra el modal.
+            $('#modal_agregar_abonos').modal('show');
         }
 
         $("#txt_FK_bodega").select2({

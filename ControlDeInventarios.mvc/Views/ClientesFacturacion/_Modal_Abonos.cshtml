@@ -1,0 +1,126 @@
+﻿@model ControlDeInventarios.entities.vw_facturacion
+@{
+    var _forma_pago = (ControlDeInventarios.entities.formas_pagos)ViewBag._forma_pago;
+}
+<form class="modal-content needs-validation" action="javascript:AgregarAbonoAFactura();" method="post" novalidate>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Agregar Abono</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    Utilice esta pantalla para agregar abonos a la factura, el abono debe ser menor o igual al saldo de la factura.
+                </div>
+                <div class="col-12 mt-3">
+                    Fecha *
+                </div>
+                <div class="col-12">
+                    <input id="txtfecha_abonos" name="txtfecha_abonos" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-end" required>
+                    <div class="invalid-feedback">Requerido</div>
+                </div>
+                <div class="col-12 mt-3">
+                    Referencia *
+                </div>
+                <div class="col-12">
+                    <input id="txtReferencia_abonos" name="txtReferencia_abonos" type="text" class="form-control" required>
+                    <div class="invalid-feedback">Requerido</div>
+                </div>
+                <div class="col-12 mt-3">
+                    Forma de pago *
+                </div>
+                <div class="col-12">
+                    <select id="txtFK_forma_pago_abonos" name="txtFK_forma_pago_abonos" class="form-control" required></select>
+                    <div class="invalid-feedback">Requerido</div>
+                </div>
+                <div class="col-12 mt-3">
+                    Monto *
+                </div>
+                <div class="col-12">
+                    <input id="txtMonto_abonos" name="txtMonto_abonos" type="number" value="@Model.saldo.ToString("N2")" max="@Model.saldo" step="0.0001" class="form-control text-end" required />
+                    <div class="invalid-feedback">Requerido</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Agregar</button>
+        </div>
+    </div>
+</form>
+
+<script>
+
+    //VALIDACION BOOTSTRAP
+    (() => {
+        'use strict';
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation');
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms).forEach((form) => {
+            form.addEventListener('submit', (event) => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+
+    //Validar datos del producto.
+    function AgregarAbonoAFactura() {
+        //Carga los datos del registro a editar.
+        var value = {
+            FK_factura: @Model.PK_codigo,
+            fecha: document.getElementById("txtfecha_abonos").value, //le pone lo que esta en el modal.
+            referencia: document.getElementById("txtReferencia_abonos").value, //le pone lo que esta en el modal.
+            FK_forma_pago: document.getElementById("txtFK_forma_pago_abonos").value, //le pone lo que esta en el modal.
+            monto: document.getElementById("txtMonto_abonos").value, //le pone lo que esta en el modal.
+        }
+        //Hace la peticion AJAX para guardar registro.
+        $.ajax({
+            url: '/ClientesFacturacion/InsertAbono',
+            type: "POST",
+            data: JSON.stringify(value),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                //Actualizar pagina.
+                location.reload();
+            },
+            error: function (response) {
+
+            }
+        });
+    }
+
+    $("#txtFK_forma_pago_abonos").select2({
+        width: '100%',
+        placeholder: "Seleccione una opción",
+        allowClear: true,
+        theme: "bootstrap-5",
+        dropdownParent: $('#modal_agregar_abonos .modal-body'),
+        ajax: {
+            url: "../../Select2/SelectFormaPago",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    terms: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+
+    //Muestra el valor seleccionado por defecto.
+    var $newOption2 = $("<option selected='selected'></option>").val('@_forma_pago.PK_codigo').text('@Html.Raw(_forma_pago.nombre)');
+    $("#txtFK_forma_pago_abonos").append($newOption2).trigger('change');
+
+</script>
