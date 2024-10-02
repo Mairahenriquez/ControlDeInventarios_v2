@@ -19,10 +19,11 @@
                 <thead>
                     <tr>
                         <th class="text-center" scope="col">N°</th>
-                        <th class="text-center" scope="col">Referencia</th>
-                        <th class="text-center" scope="col">Fecha</th>
-                        <th class="text-center" scope="col">Factura</th>
                         <th class="text-center" scope="col">Forma de pago</th>
+                        <th class="text-center" scope="col">Fecha</th>
+                        <th class="text-center" scope="col">Referencia</th>
+                        <th class="text-center" scope="col">Factura</th>
+                        <th class="text-center" scope="col">Ciente</th>
                         <th class="text-center" scope="col">Monto</th>
                         <th class="text-center" scope="col">Estado</th>
                     </tr>
@@ -30,18 +31,19 @@
                 <tbody>
                     @foreach (var _registro in Model)
                     {
-                        <tr>
-                            <th class="text-center" scope="row"><a href="/ClientesAbonos/Details/@_registro.PK_codigo">@_registro.PK_codigo</a></th>
-                            <td>@_registro.referencia</td>
-                            <td class="text-end">@_registro.fecha.ToString("dd/MM/yyyy")</td>
-                            <td>@_registro.FK_factura</td>
-                            <td>@_registro.forma_pago</td>
-                            <td class="text-end">@_registro.monto.ToString("C2")</td>
-                            <td>
-                                <label style="color:@_registro.estado_color"><i class="fa fa-circle"></i></label>
-                                <label>@_registro.estado</label>
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="text-center" scope="row"><a href="/ClientesAbonos/Details/@_registro.PK_codigo">@_registro.PK_codigo</a></th>
+                        <td>@_registro.forma_pago</td>
+                        <td class="text-end">@_registro.fecha.ToString("dd/MM/yyyy")</td>
+                        <td>@_registro.referencia</td>
+                        <td>@_registro.FK_factura</td>
+                        <td>@_registro.cliente</td>
+                        <td class="text-end">@_registro.monto.ToString("C2")</td>
+                        <td>
+                            <label style="color:@_registro.estado_color"><i class="fa fa-circle"></i></label>
+                            <label>@_registro.estado</label>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>

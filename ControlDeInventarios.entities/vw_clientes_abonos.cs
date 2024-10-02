@@ -29,5 +29,6 @@ namespace ControlDeInventarios.entities
         public string estado { get; set; }
         public string estado_color { get; set; }
         public string cuenta_corriente { get; set; }
+        public string cliente { get; set; }
     }
 }

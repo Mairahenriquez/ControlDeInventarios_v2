@@ -33,6 +33,11 @@
             <label class="form-label bold">@Model.monto.ToString("C2")</label>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label>Estado:</label><br />
+            <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
+            <label class="form-label bold">@Model.estado</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label class="form-label">Observaciones: </label><br />
             <label class="form-label bold">@Model.observaciones</label>
         </div>
@@ -41,9 +46,8 @@
             <label class="form-label bold">@Model.FK_factura</label>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
-            <label>Estado:</label><br />
-            <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
-            <label class="form-label bold">@Model.estado</label>
+            <label class="form-label">Cliente:</label><br />
+            <label class="form-label bold">@Model.cliente</label>
         </div>
     </div>
 </div>
@@ -142,7 +146,8 @@
             @if (Model.FK_estado == 1)
             {
                 <li><a href="#!" class="dropdown-item" onclick="return sweetAlertConfirm2(Procesar,'¿Desea procesar el Abono?');"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>
-                <li><a href="#!" class="dropdown-item" onclick="AbrirModalFacturas();"><i class="fa-solid fa-circle-check"></i> Agregar facturas</a> </li>
+                <li><a href="/ClientesAbonos/Eliminar/@Model.PK_codigo" class="dropdown-item"><i class="fa-solid fa-trash-can"></i> Eliminar</a></li>
+                <li><a href="#!" class="dropdown-item" onclick="AbrirModalFacturas();"><i class="fa-solid fa-plus"></i> Agregar facturas</a> </li>
             }
         </ul>
     </div>
@@ -226,19 +231,36 @@
             $('#modal_editar_monto').modal('show');
         }
 
-        //Activar.
         function Procesar() {
+            var value = {
+                id: '@Model.PK_codigo'
+            }
+            //Hace la peticion AJAX para guardar.
             $.ajax({
-                type: "GET",
-                url: "../../ClientesAbonos/Procesar?id=@Model.PK_codigo",
+                url: '../../ClientesAbonos/Procesar',
+                type: "POST",
+                data: JSON.stringify(value),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                complete: function () {
-                    location.reload();
+                success: function (data) {
+                    if (data.result === 0) {
+                        swal({
+                            text: data.message,
+                            showConfirmButton: true,
+                            dangerMode: true
+                        })
+                        .then((willDelete) => {
+
+                        });
+                    }
+                    else {
+                        //Actualizar vista.
+                        location.reload();
+                    }
                 },
                 error: function (response) {
-                    //alert(response);
-                },
+
+                }
             });
         }
 

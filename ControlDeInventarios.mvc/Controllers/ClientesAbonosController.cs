@@ -164,6 +164,53 @@ namespace ControlDeInventarios.mvc.Controllers
             }
         }
 
+        public ActionResult Eliminar(int id)
+        {
+            try
+            {
+                //Buscar registro.
+                var _registro = db.vw_clientes_abonos.Where(x => x.PK_codigo == id).FirstOrDefault();
+
+                //Se valida que el modelo no sea nulo.
+                if (_registro != null)
+                {
+                    //Se valida el DataAnnotation que sea valido.
+                    if (ModelState.IsValid)
+                    {
+                        //Guarda el registro en la base de datos.
+                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["Conexion"].ConnectionString))
+                        {
+                            using (SqlCommand cmd = new SqlCommand("sp_clientes_abonos_eliminar", con))
+                            {
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.Add("@PK_codigo", SqlDbType.Int).Value = _registro.PK_codigo;
+                                con.Open();
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                        //Guarda en bitacora.
+                        var descripcion = $"Factura eliminada en el Abono: {_registro.PK_codigo} - {_registro.referencia}.";
+                        var FK_usuario = 1;
+                        bt.Create(descripcion, FK_usuario);
+
+                        //Redirecciona a la vista Details.
+                        return RedirectToAction("Index");
+                    }
+                }
+                //Actualiza la vista.
+                return View();
+            }
+            catch (Exception e)
+            {
+                //Guarda en bitacora.
+                var descripcion = $"ClientesAbonosController :: Eliminar() :: {e.Message}.";
+                bt.Create(descripcion, 1);
+
+                //Actualiza la vista.
+                return View();
+            }
+        }
+
         public ActionResult _Modal_Facturas(int id)
         {
             //Busqueda de registro.
@@ -259,7 +306,6 @@ namespace ControlDeInventarios.mvc.Controllers
                                 cmd.Parameters.Add("@referencia", SqlDbType.NVarChar).Value = (object)_registro.referencia ?? DBNull.Value;
                                 cmd.Parameters.Add("@observaciones", SqlDbType.NVarChar).Value = (object)_registro.observaciones ?? DBNull.Value;
                                 cmd.Parameters.Add("@monto", SqlDbType.Decimal).Value = value.monto;
-
                                 con.Open();
                                 cmd.ExecuteNonQuery();
                             }
@@ -349,30 +395,53 @@ namespace ControlDeInventarios.mvc.Controllers
                     {
                         //Buscar registro.
                         var _registro_detalle = db.vw_clientes_abonos_facturas.Where(x => x.FK_abono == id).ToList();
+                        var _documentos_invalidos = db.vw_clientes_abonos_facturas.Where(x => x.FK_abono == id && x.monto > x.saldo).ToList();
 
-                        if (_registro.monto == _registro_detalle.Sum(x => x.monto))
+                        //Validar que las facturas estén pendientes de abonos.
+                        if (_documentos_invalidos.Count() == 0)
                         {
-                            //Guarda el registro en la base de datos.
-                            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["Conexion"].ConnectionString))
-                            {
-                                using (SqlCommand cmd = new SqlCommand("clientes_abonos_procesar", con))
-                                {
-                                    cmd.CommandType = CommandType.StoredProcedure;
-                                    cmd.Parameters.Add("@PK_codigo", SqlDbType.Int).Value = _registro.PK_codigo;
+                            //Asignar valor.
+                            var monto = _registro_detalle.Sum(x => x.monto);
 
-                                    con.Open();
-                                    cmd.ExecuteNonQuery();
+                            //Validar que el monto del abono sea igual al monto total de las facturas seleccionadas.
+                            if (Math.Round(monto, 2) == Math.Round(_registro.monto, 2) && _registro.monto > 0)
+                            {
+                                //Procesar el abono.
+                                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["Conexion"].ConnectionString))
+                                {
+                                    using (SqlCommand cmd = new SqlCommand("sp_clientes_abonos_procesar", con))
+                                    {
+                                        cmd.CommandType = CommandType.StoredProcedure;
+                                        cmd.Parameters.Add("@PK_codigo", SqlDbType.Int).Value = _registro.PK_codigo;
+                                        con.Open();
+                                        cmd.ExecuteNonQuery();
+                                    }
                                 }
+                                //Guarda en bitacora.
+                                var descripcion = $"Abono procesado: {_registro.PK_codigo} - {_registro.referencia}.";
+                                var FK_usuario = 1;
+                                bt.Create(descripcion, FK_usuario);
+
+                                //Actualiza la vista.
+                                return new JsonResult { Data = new { result = 1, message = "" } };
+                            }
+                            else
+                            {
+                                //Actualiza la vista.
+                                return new JsonResult { Data = new { result = 0, message = "No se puede aplicar el abono, los montos no coinciden." } };
                             }
                         }
-                        //Guarda en bitacora.
-                        var descripcion = $"Abono procesado: {_registro.PK_codigo} - {_registro.referencia}.";
-                        var FK_usuario = 1;
-                        bt.Create(descripcion, FK_usuario);
-
-                        //Retorna hacia la pantalla de Detalle.
-                        return Json(_registro);
+                        else
+                        {
+                            //Actualiza la vista.
+                            return new JsonResult { Data = new { result = 0, message = "Verificar que los abonos sean igual al total del documento." } };
+                        }
                     }
+                    else
+                    {
+                        //Actualiza la vista.
+                        return new JsonResult { Data = new { result = 0, message = "No se ha seleccionado ningún documento." } };
+                    }                   
                 }
                 //Actualizar vista.
                 return Json(_registro);
@@ -383,8 +452,8 @@ namespace ControlDeInventarios.mvc.Controllers
                 var descripcion = $"ClientesAbonosController :: Procesar() :: {e.Message}.";
                 bt.Create(descripcion, 1);
 
-                //Actualizar vista.
-                return Json(id);
+                //Actualiza la página.
+                return new JsonResult { Data = new { result = 0, message = "No se puede procesar el abono." } };
             }
         }
 
