@@ -66,6 +66,7 @@ namespace ControlDeInventarios.mvc.Controllers
                         value.total = 0;
                         value.FK_estado = 1;
                         value.FK_usuario = 1;
+                        value.FK_forma_pago = 1;
 
                         //Guarda el registro en la base de datos.
                         db.clientes_pedidos.Add(value);
@@ -120,7 +121,6 @@ namespace ControlDeInventarios.mvc.Controllers
                         _orden.referencia = value.referencia;
                         _orden.observaciones = value.observaciones;
                         _orden.FK_cliente = value.FK_cliente;
-                        _orden.FK_forma_pago = value.FK_forma_pago;
                         _orden.FK_condicion_pago = value.FK_condicion_pago;
 
                         //Se actualiza el registro.
@@ -295,10 +295,10 @@ namespace ControlDeInventarios.mvc.Controllers
                 var _detalle = db.vw_clientes_pedidos_detalle.Where(x => x.FK_pedido == id).ToList();
 
                 //Validar que el modelo no sea null.
-                if (_orden != null && _detalle.Sum(x => x.total) > 0)
+                if (_orden != null)
                 {
                     // Validar que el DataAnnotation sea valido.
-                    if (ModelState.IsValid)
+                    if (_detalle.Sum(x => x.total) > 0)
                     {
                         //Ejecución de procedimiento.
                         using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["Conexion"].ConnectionString))
@@ -317,12 +317,14 @@ namespace ControlDeInventarios.mvc.Controllers
                         var FK_usuario = 1;
                         bt.Create(descripcion, FK_usuario);
 
-                        //Retorna hacia la pantalla de Detalle.
-                        return Json(_orden);
+                        //Actualiza la vista.
+                        return new JsonResult { Data = new { result = 1, message = "" } };
                     }
+                    //Actualiza la vista.
+                    return new JsonResult { Data = new { result = 0, message = "No se puede procesar el pedido, verificar que el total sea mayor a cero." } };
                 }
-                //Actualizar vista.
-                return Json(_orden);
+                //Actualiza la vista.
+                return new JsonResult { Data = new { result = 0, message = "No se puede procesar el pedido, verificar que existan productos seleccionados." } };
             }
             catch (Exception e)
             {
@@ -330,8 +332,8 @@ namespace ControlDeInventarios.mvc.Controllers
                 var descripcion = $"ClientesPedidosController :: Procesar() :: {e.Message}.";
                 bt.Create(descripcion, 1);
 
-                //Actualizar vista.
-                return Json(id);
+                //Actualiza la página.
+                return new JsonResult { Data = new { result = 0, message = "No se puede procesar el abono." } };
             }
         }
 

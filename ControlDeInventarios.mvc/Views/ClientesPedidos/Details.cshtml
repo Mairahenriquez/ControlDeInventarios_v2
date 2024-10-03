@@ -17,33 +17,29 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cliente:</label><br />
+            <label class="form-label bold">@Model.cliente</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label class="form-label">Fecha:</label><br />
-            <label class="form-label bold">@Model.fecha.ToString("yyyy-MM-dd")</label>
+            <label class="form-label bold">@Model.fecha.ToString("dd/MM/yyyy")</label>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label class="form-label">Referencia:</label><br />
             <label class="form-label bold">@Model.referencia</label>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
-            <label class="form-label">Cliente:</label><br />
-            <label class="form-label bold">@Model.cliente</label>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
-            <label class="form-label">Forma de pago: </label><br />
-            <label class="form-label bold">@Model.forma_pago</label>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label class="form-label">Condición de pago: </label><br />
             <label class="form-label bold">@Model.condicion_pago</label>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
-            <label class="form-label">Observaciones: </label><br />
-            <label class="form-label bold">@Model.observaciones</label>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label>Estado:</label><br />
             <label style="color:@Model.estado_color"><i class="fa fa-circle"></i></label>
             <label class="form-label bold">@Model.estado</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Observaciones: </label><br />
+            <label class="form-label bold">@Model.observaciones</label>
         </div>
     </div>
 </div>
@@ -153,7 +149,7 @@
             @if (Model.FK_estado == 1)
             {
                 <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Procesar,'¿Desea procesar el pedido?');"><i class="fa-solid fa-circle-check"></i> Procesar</a> </li>
-                <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_agregar_productos"><i class="fa-solid fa-circle-check"></i> Agregar productos</a> </li>
+                <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_agregar_productos"><i class="fa-solid fa-plus"></i> Agregar productos</a> </li>
             }
         </ul>
     </div>
@@ -250,7 +246,6 @@
             var FK_inventario = document.getElementById("txt_FK_inventario").value; //le pone lo que esta en el modal.
             var cantidad = document.getElementById("txt_cantidad").value; //le pone lo que esta en el modal.
             var precio_unitario = document.getElementById("txt_costo_unitario").value; //le pone lo que esta en el modal.
-
             //Carga los datos del registro a editar;
             var value = {
                 FK_pedido: @Model.PK_codigo,
@@ -258,7 +253,6 @@
                 cantidad: cantidad,
                 precio_unitario: precio_unitario
             }
-
             //Hace la peticion AJAX para guardar registro.
             $.ajax({
                 url: '/ClientesPedidos/Insert',
@@ -280,12 +274,10 @@
         function ValidarDatos() {
             var id = document.getElementById("txt_FK_inventario").value; //le pone lo que esta en el modal.
             var cantidad = document.getElementById("txt_cantidad").value; //le pone lo que esta en el modal.
-
             //Carga los datos del registro a editar;
             var value = {
                 id: id
             }
-
             //Hace la peticion AJAX para guardar registro.
             $.ajax({
                 url: '/ClientesPedidos/ValidarDatos',
@@ -315,10 +307,25 @@
             $.ajax({
                 type: "GET",
                 url: "../../ClientesPedidos/Procesar?id=@Model.PK_codigo",
+                type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                complete: function () {
-                    location.reload();
+                success: function (data) {
+                    if (data.result === 0) {
+                        //Mostrar mensaje de referencia.
+                        swal({
+                            text: data.message,
+                            showConfirmButton: true,
+                            dangerMode: true
+                        })
+                            .then((willDelete) => {
+
+                            });
+                    }
+                    else {
+                        //Actualizar vista.
+                        location.reload();
+                    }
                 },
                 error: function (response) {
                     //alert(response);

@@ -25,15 +25,11 @@
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label class="form-label">Fecha:</label><br />
-            <label class="form-label bold">@Model.fecha.ToString("yyyy-MM-dd")</label>
+            <label class="form-label bold">@Model.fecha.ToString("dd/MM/yyyy")</label>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label class="form-label">Cliente:</label><br />
             <label class="form-label bold">@Model.cliente</label>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
-            <label class="form-label">Forma de pago: </label><br />
-            <label class="form-label bold">@Model.forma_pago</label>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label class="form-label">Condición de pago: </label><br />
@@ -106,13 +102,13 @@
                         </tbody>
                     </table>
                 </div>
-                <!-- Tab panes Movimientos -->
+                <!-- Tab panes Abonos -->
                 <div class="tab-pane container fade" id="Abonos">
                     <table class="table table-bordered" id="myTable_Abonos">
                         <thead>
                             <tr>
                                 <th class="text-center" scope="col">Forma de Pago</th>
-                                <th class="text-center" scope="col">Fecha</th>
+                                @*<th class="text-center" scope="col">Fecha</th>*@
                                 <th class="text-center" scope="col">Referencia</th>
                                 <th class="text-center" scope="col">Monto</th>
                                 @if (Model.FK_estado == 1)
@@ -126,7 +122,7 @@
                             {
                             <tr>
                                 <td>@_ab.forma_pago</td>
-                                <td class="text-end">@_ab.fecha.ToString("dd/MM/yyyy")</td>
+                                @*<td class="text-end">@_ab.fecha.ToString("dd/MM/yyyy")</td>*@
                                 <td>@_ab.referencia</td>
                                 <td class="text-end">@_ab.monto.ToString("C2") </td>
                                 @if (Model.FK_estado == 1 && _ab.ingreso_manual == false)
@@ -135,7 +131,7 @@
                                         <a href="/ClientesFacturacion/DeleteAbono/@_ab.PK_codigo"><i class="fa-solid fa-trash-can"></i></a>
                                     </td>
                                 }
-                                else
+                                else if(Model.FK_estado == 1 && _ab.ingreso_manual == true)
                                 {
                                     <td class="text-center"></td>
                                 }
@@ -226,7 +222,7 @@
     </div>
 }
 
-<!-- Modal para agregar productos -->
+<!-- Modal para seleccionar bodega -->
 <div class="modal fade" id="modal_seleccionar_bodega" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form class="modal-content needs-validation" id="form_seleccionar_bodega" action="javascript:Procesar();" method="post" novalidate>
@@ -298,13 +294,11 @@
         //Procesar.
         function Procesar() {
             var FK_bodega = document.getElementById("txt_FK_bodega").value; //le pone lo que esta en el modal.
-
             //Carga los datos del registro a editar;
             var value = {
                 id: @Model.PK_codigo,
                 FK_bodega: FK_bodega,
             }
-
             //Hace la peticion AJAX para guardar registro.
             $.ajax({
                 url: '/ClientesFacturacion/Procesar',
@@ -313,8 +307,23 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    //Actualizar pagina.
-                    location.reload();
+                    if (data.result === 0) {
+                        //Cerrar modal.
+                        $('#modal_seleccionar_bodega').modal('hide')
+                        //Mostrar mensaje de referencia.
+                        swal({
+                            text: data.message,
+                            showConfirmButton: true,
+                            dangerMode: true
+                        })
+                            .then((willDelete) => {
+
+                            });
+                    }
+                    else {
+                        //Actualizar vista.
+                        location.reload();
+                    }
                 },
                 error: function (response) {
 
@@ -358,7 +367,7 @@
             placeholder: "Seleccione una opción",
             allowClear: true,
             theme: "bootstrap-5",
-            dropdownParent: $('#modal_seleccionar_bodega'),
+            dropdownParent: $('#modal_seleccionar_bodega  .modal-body'),
             ajax: {
                 url: "../../Select2/SelectBodega",
                 dataType: 'json',

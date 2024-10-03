@@ -51,12 +51,13 @@ namespace ControlDeInventarios.mvc.Controllers
                 //Buscar registro.
                 var _factura = db.facturacion.Where(x => x.PK_codigo == id).FirstOrDefault();
                 var _detalle = db.vw_facturacion_detalle.Where(x => x.FK_factura == id).ToList();
+                var _abonos = db.vw_clientes_abonos.Where(x => x.FK_factura == id).ToList();
 
                 //Validar que el modelo no sea null.
                 if (_factura != null && _detalle.Sum(x => x.total) > 0)
                 {
-                    // Validar que el DataAnnotation sea valido.
-                    if (ModelState.IsValid)
+                    // Validar que los montos sean iguales, es decir que la factura este pagada.
+                    if (Math.Round(_abonos.Sum(x => x.monto), 2) == Math.Round(_factura.total, 2))
                     {
                         //Asignar valor.
                         _factura.FK_bodega = FK_bodega;
@@ -81,12 +82,14 @@ namespace ControlDeInventarios.mvc.Controllers
                         var FK_usuario = 1;
                         bt.Create(descripcion, FK_usuario);
 
-                        //Retorna hacia la pantalla de Detalle.
-                        return Json(_factura);
+                        //Actualiza la vista.
+                        return new JsonResult { Data = new { result = 1, message = "" } };
                     }
+                    //Actualiza la vista.
+                    return new JsonResult { Data = new { result = 0, message = "No se puede procesar la factura, verificar que los abonos sean igual al total del documento." } };
                 }
-                //Actualizar vista.
-                return Json(_factura);
+                //Actualiza la vista.
+                return new JsonResult { Data = new { result = 0, message = "No se puede procesar la factura, verificar que los abonos sean igual al total del documento." } };
             }
             catch (Exception e)
             {
@@ -94,8 +97,8 @@ namespace ControlDeInventarios.mvc.Controllers
                 var descripcion = $"ClientesFacturacionController :: Procesar() :: {e.Message}.";
                 bt.Create(descripcion, 1);
 
-                //Actualizar vista.
-                return Json(id);
+                //Actualiza la página.
+                return new JsonResult { Data = new { result = 0, message = "No se puede procesar el abono." } };
             }
         }
 

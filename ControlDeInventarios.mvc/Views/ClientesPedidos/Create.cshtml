@@ -18,6 +18,11 @@
 <form class="modal-content needs-validation" method="post" novalidate>
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cliente *</label>
+            <select id="FK_cliente" name="FK_cliente" class="form-control" required></select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label class="form-label">Fecha *</label>
             <input id="fecha" name="fecha" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-end" required>
             <div class="invalid-feedback">Requerido</div>
@@ -25,16 +30,6 @@
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
             <label class="form-label">Referencia *</label>
             <input id="referencia" name="referencia" type="text" class="form-control" required>
-            <div class="invalid-feedback">Requerido</div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
-            <label class="form-label">Cliente *</label>
-            <select id="FK_cliente" name="FK_cliente" class="form-control" required></select>
-            <div class="invalid-feedback">Requerido</div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
-            <label class="form-label">Forma de pago *</label>
-            <select id="FK_forma_pago" name="FK_forma_pago" class="form-control" required></select>
             <div class="invalid-feedback">Requerido</div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
@@ -99,28 +94,6 @@
             }
         });
 
-        $("#FK_forma_pago").select2({
-            width: '100%',
-            placeholder: "Seleccione una opción",
-            allowClear: true,
-            theme: "bootstrap-5",
-            ajax: {
-                url: "../../Select2/SelectFormaPago",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        terms: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                }
-            }
-        });
-
         $("#FK_condicion_pago").select2({
             width: '100%',
             placeholder: "Seleccione una opción",
@@ -148,8 +121,6 @@
         }
 
         //Muestra el valor seleccionado por defecto.
-        var $newOption2 = $("<option selected='selected'></option>").val('@FormaPago.PK_codigo').text('@FormaPago.nombre');
-        $("#FK_forma_pago").append($newOption2).trigger('change');
         var $newOption2 = $("<option selected='selected'></option>").val('@CondicionPago.PK_codigo').text('@CondicionPago.nombre');
         $("#FK_condicion_pago").append($newOption2).trigger('change');
 
