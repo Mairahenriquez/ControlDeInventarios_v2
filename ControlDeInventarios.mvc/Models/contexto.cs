@@ -15,6 +15,7 @@ namespace ControlDeInventarios.mvc.Models
         }
         public DbSet<vw_clientes_abonos> vw_clientes_abonos { get; set; }
         public DbSet<vw_clientes_abonos_facturas> vw_clientes_abonos_facturas { get; set; }
+        public DbSet<tesoreria_bancos> tesoreria_bancos { get; set; }
         public DbSet<vw_tesoreria_bancos> vw_tesoreria_bancos { get; set; }
         public DbSet<vw_tesoreria_notas_partidas> vw_tesoreria_notas_partidas { get; set; }
         public DbSet<vw_tesoreria_notas_facturas> vw_tesoreria_notas_facturas { get; set; }

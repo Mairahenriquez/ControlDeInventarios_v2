@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ControlDeInventarios.entities
 {
-    public class vw_tesoreria_bancos
+    public class tesoreria_bancos
     {
         [Key]
         public int PK_codigo { get; set; }
@@ -18,6 +18,5 @@ namespace ControlDeInventarios.entities
         public decimal saldo_actual { get; set; }
         public DateTime fecha_inicial { get; set; }
         public int FK_cuenta_contable { get; set; }
-        public string cuenta_contable { get; set; }
     }
 }
