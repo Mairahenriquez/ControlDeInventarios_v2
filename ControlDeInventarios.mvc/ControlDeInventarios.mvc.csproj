@@ -509,6 +509,7 @@
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\ProveedoresOrdenesComprasController.cs" />
     <Compile Include="Controllers\Select2Controller.cs" />
+    <Compile Include="Controllers\TesoreriaBancosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -744,6 +745,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Views\Bitacoras\" />
     <Folder Include="Views\Select2\" />
+    <Folder Include="Views\TesoreriaBancos\" />
     <Folder Include="Views\Usuario\" />
   </ItemGroup>
   <ItemGroup>
