@@ -740,12 +740,15 @@
     <Content Include="Views\ClientesAbonos\_Modal_Facturas.cshtml" />
     <Content Include="Views\ClientesAbonos\_Modal_Editar_Monto.cshtml" />
     <Content Include="Views\ClientesFacturacion\_Modal_Abonos.cshtml" />
+    <Content Include="Views\TesoreriaBancos\Index.cshtml" />
+    <Content Include="Views\TesoreriaBancos\Details.cshtml" />
+    <Content Include="Views\TesoreriaBancos\Create.cshtml" />
+    <Content Include="Views\TesoreriaBancos\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Bitacoras\" />
     <Folder Include="Views\Select2\" />
-    <Folder Include="Views\TesoreriaBancos\" />
     <Folder Include="Views\Usuario\" />
   </ItemGroup>
   <ItemGroup>

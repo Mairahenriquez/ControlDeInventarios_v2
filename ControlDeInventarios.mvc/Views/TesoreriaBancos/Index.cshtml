@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.vw_tesoreria_bancos>
+@{
+    ViewBag.Title = "Cuentas Bancarias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Cuentas Bancarias</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">N°</th>
+                        <th class="text-center" scope="col">Nombre</th>
+                        <th class="text-center" scope="col">Número</th>
+                        <th class="text-center" scope="col">Saldo Actual</th>
+                        @*<th class="text-center" scope="col">Activo</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _registro in Model)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row"><a href="/TesoreriaBancos/Details/@_registro.PK_codigo">@_registro.PK_codigo</a></th>
+                            <td>@_registro.nombre</td>
+                            <td>@_registro.numero</td>
+                            <td class="text-end">@_registro.saldo_actual.ToString("C2")</td>
+                            <td class="text-end">@_registro.saldo_actual.ToString("C2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="~/TesoreriaBancos/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']]
+            });
+        });
+    </script>
+}
+
+
