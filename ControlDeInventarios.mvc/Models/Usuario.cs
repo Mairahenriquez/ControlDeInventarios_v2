@@ -51,6 +51,30 @@ namespace ControlDeInventarios.mvc.Models
             return rol.nombre == "admin";
         }
 
+        public bool IsGerente()
+        {
+            usuarios_roles rol = (new UsuarioRol()).getRol(FK_rol);
+            return rol.nombre == "gerente";
+        }
+
+        public bool IsContador()
+        {
+            usuarios_roles rol = (new UsuarioRol()).getRol(FK_rol);
+            return rol.nombre == "contador";
+        }
+
+        public bool IsVendedor()
+        {
+            usuarios_roles rol = (new UsuarioRol()).getRol(FK_rol);
+            return rol.nombre == "vendedor";
+        }
+
+        public bool IsAtencionCliente()
+        {
+            usuarios_roles rol = (new UsuarioRol()).getRol(FK_rol);
+            return rol.nombre == "atención al cliente";
+        }
+
         public usuarios getUsuario(string _correo)
         {
             return  _context.usuarios.FirstOrDefault(u => u.correo == _correo);

@@ -51,47 +51,112 @@
             <h1 class="logo logo-brand">Sistema de Control de Inventario "InnovaTec"</h1>
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li class="dropdown">
-                        <a href="#"><span>Inventarios</span> <i class="bi bi-chevron-down"></i></a>
-                        <ul>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "Inventarios")'>Inventarios</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "Bodegas")'>Bodegas</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "InventariosMovimientos")'>Movimientos de Inventarios</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "KardexVentas")'>Productos más vendidos</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "KardexAgotado")'>Productos agotados</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#"><span>Compras</span> <i class="bi bi-chevron-down"></i></a>
-                        <ul>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "Proveedores")'>Proveedores</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ProveedoresOrdenesCompras")'>Orden de compra</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ProveedoresCompras")'>Facturas de compra</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "DevolucionesCompras")'>Devoluciones de compra</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#"><span>Ventas</span> <i class="bi bi-chevron-down"></i></a>
-                        <ul>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "Clientes")'>Clientes</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesPedidos")'>Pedidos</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesFacturacion")'>Facturas de venta</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesAbonos")'>Abonos</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "DevolucionesVentas")'>Devoluciones de Ventas</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#"><span>Contabilidad</span> <i class="bi bi-chevron-down"></i></a>
-                        <ul>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ContabilidadCuentasContables")'>Cuentas contables</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "ContabilidadPartidas")'>Partidas contables</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "NotaCredito")'>Notas de Crédito</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "NotaDebito")'>Notas de debito</a></li>
-                            <li><a class="nav-link scrollto" href='@Url.Action("Index", "TesoreriaBancos")'>Cuentas Bancarias</a></li>
-                            @*<li><a class="nav-link scrollto active" href='@Url.Action("Libro_diario", "Inventarios")'>Libro de cuentas</a></li>*@
-                            @*<li><a class="nav-link scrollto active" href='@Url.Action("Libro_diario", "Inventarios")'>Libro mayor</a></li>*@
-                        </ul>
-                    </li>
+                    @if (user.isAdmin() || user.IsGerente())
+                    {
+                        <li class="dropdown">
+                            <a href="#"><span>Inventarios</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "Inventarios")'>Inventarios</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "Bodegas")'>Bodegas</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "InventariosMovimientos")'>Movimientos de Inventarios</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "KardexVentas")'>Productos más vendidos</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "KardexAgotado")'>Productos agotados</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (user.IsAtencionCliente())
+                    {
+                        <li><a class="nav-link scrollto" href='@Url.Action("Index", "Bodegas")'>Bodegas</a></li>
+
+                        <li class="dropdown">
+                            <a href="#"><span>Inventarios</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "Inventarios")'>Inventarios</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "InventariosMovimientos")'>Movimientos de Inventarios</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#"><span>Kardex</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "KardexVentas")'>Productos más vendidos</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "KardexAgotado")'>Productos agotados</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (user.isAdmin() || user.IsGerente())
+                    {
+                        <li class="dropdown">
+                            <a href="#"><span>Compras</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "Proveedores")'>Proveedores</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ProveedoresOrdenesCompras")'>Orden de compra</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ProveedoresCompras")'>Facturas de compra</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "DevolucionesCompras")'>Devoluciones de compra</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (user.isAdmin() || user.IsGerente())
+                    {
+                        <li class="dropdown">
+                            <a href="#"><span>Ventas</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "Clientes")'>Clientes</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesPedidos")'>Pedidos</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesFacturacion")'>Facturas de venta</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesAbonos")'>Abonos</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "DevolucionesVentas")'>Devoluciones de Ventas</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (user.IsVendedor())
+                    {
+                        <li><a class="nav-link scrollto" href='@Url.Action("Index", "Clientes")'>Clientes</a></li>
+                        <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesPedidos")'>Pedidos</a></li>
+                        <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesFacturacion")'>Facturación</a></li>
+
+                        <li class="dropdown">
+                            <a href="#"><span>Pagos y Devoluciones</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ClientesAbonos")'>Abonos</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "DevolucionesVentas")'>Devoluciones de Ventas</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (user.isAdmin() || user.IsGerente())
+                    {
+                        <li class="dropdown">
+                            <a href="#"><span>Contabilidad</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ContabilidadCuentasContables")'>Cuentas contables</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ContabilidadPartidas")'>Partidas contables</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "NotaCredito")'>Notas de Crédito</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "NotaDebito")'>Notas de debito</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "TesoreriaBancos")'>Cuentas Bancarias</a></li>
+                                @*<li><a class="nav-link scrollto active" href='@Url.Action("Libro_diario", "Inventarios")'>Libro de cuentas</a></li>*@
+                                @*<li><a class="nav-link scrollto active" href='@Url.Action("Libro_diario", "Inventarios")'>Libro mayor</a></li>*@
+                            </ul>
+                        </li>
+                    }
+                    @if (user.isAdmin() || user.IsGerente() || user.IsContador())
+                    {
+                        <li class="dropdown">
+                            <a href="#"><span>Contabilidad</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ContabilidadCuentasContables")'>Cuentas contables</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "ContabilidadPartidas")'>Partidas contables</a></li>
+                                @*<li><a class="nav-link scrollto active" href='@Url.Action("Libro_diario", "Inventarios")'>Libro de cuentas</a></li>*@
+                                @*<li><a class="nav-link scrollto active" href='@Url.Action("Libro_diario", "Inventarios")'>Libro mayor</a></li>*@
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#"><span>Tesoreria</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "NotaCredito")'>Notas de Crédito</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "NotaDebito")'>Notas de debito</a></li>
+                                <li><a class="nav-link scrollto" href='@Url.Action("Index", "TesoreriaBancos")'>Cuentas Bancarias</a></li>
+                            </ul>
+                        </li>
+                    }
                     @*<li><a class="getstarted scrollto contables" href='@Url.Action("Index", "ContabilidadCuentasContables")'>Cuentas</a></li>*@
                     @if (user.isAdmin())
                     {
