@@ -103,6 +103,7 @@ namespace ControlDeInventarios.mvc.Controllers
             return View(_inventario);
 
         }
+
         [HttpPost]
         public ActionResult Edit(vw_inventarios value)
         {
