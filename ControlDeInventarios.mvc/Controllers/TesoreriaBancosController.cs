@@ -54,7 +54,7 @@ namespace ControlDeInventarios.mvc.Controllers
                     {
                         //Asignación de valores.
                         value.saldo_actual = 0;
-                        value.activo = 1;
+                        value.activo = true;
 
                         //Guardar registro.
                         db.tesoreria_bancos.Add(value);

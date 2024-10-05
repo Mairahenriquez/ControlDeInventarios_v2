@@ -1,8 +1,115 @@
-﻿
+﻿@model ControlDeInventarios.entities.vw_tesoreria_bancos
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Cuentas Bancarias";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var _existencias = ViewBag._existencias;
 }
 
-<h2>Details</h2>
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Cuenta Bancaria # @Model.PK_codigo </h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Nombre:</label><br />
+            <label class="form-label bold">@Model.nombre</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Número:</label><br />
+            <label class="form-label bold">@Model.numero</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Cuenta Contable:</label><br />
+            <label class="form-label bold">@Model.cuenta_contable</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Saldo Inicial: </label><br />
+            <label class="form-label bold">@Model.saldo_inicial.ToString("C2") </label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Saldo Actual: </label><br />
+            <label class="form-label bold">@Model.saldo_actual.ToString("C2") </label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha Inicial:</label><br />
+            <label class="form-label bold">@Model.fecha_inicial.ToString("dd/MM/yyyy")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Activo: </label><br />
+            <div class="form-check">
+                <input id="activo" name="activo" type="checkbox" class="form-check-input" checked="@Model.activo" disabled />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="/TesoreriaBancos/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Cuentas Bancarias</span></a>
+    <a href="~/TesoreriaBancos/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+    <a href="~/TesoreriaBancos/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Opciones
+        </button>
+        <ul class="dropdown-menu">
+            @if (Model.activo == true)
+            {
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Desactivar,'¿Desea desactivar la Cuenta Bancaria?');"><i class="fa-solid fa-circle-check"></i> Desactivar</a> </li>
+            }
+            else
+            {
+                <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Activar,'¿Desea activar la Cuenta Bancaria?');"><i class="fa-solid fa-circle-check"></i> Activar</a> </li>
+            }
+        </ul>
+    </div>
+}
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable_Detalle');
+            new DataTable('#myTable_Detalle', {
+                order: [[1, 'desc']]
+            });
+        });
+
+        //Activar.
+        function Desactivar() {
+            $.ajax({
+                type: "GET",
+                url: "../../TesoreriaBancos/Desactivar?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+
+        function Activar() {
+            $.ajax({
+                type: "GET",
+                url: "../../TesoreriaBancos/Activar?id=@Model.PK_codigo",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function () {
+                    location.reload();
+                },
+                error: function (response) {
+                    //alert(response);
+                },
+            });
+        }
+    </script>
+}
 
