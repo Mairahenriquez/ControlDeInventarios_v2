@@ -218,6 +218,10 @@
                 <li><a href="#" class="dropdown-item" onclick="return sweetAlertConfirm2(Anular,'¿Desea anular la factura?');"><i class="fa-solid fa-circle-check"></i> Anular</a> </li>
                 <li><a href="#!" class="dropdown-item" onclick="AbrirModalAbonos();"><i class="fa-solid fa-plus"></i> Agregar Abono</a> </li>
             }
+            @if (Model.FK_estado == 2)
+            {
+                <li><a href="#!" class="dropdown-item" onclick="GetGenerarPDF();"><i class="fa fa-file-pdf-o"></i> Generar PDF</a> </li>
+            }
         </ul>
     </div>
 }
@@ -360,6 +364,40 @@
             });
             //Muestra el modal.
             $('#modal_agregar_abonos').modal('show');
+        }
+
+        //Generar PDF.
+        function GetGenerarPDF() {
+            //Crea el objeto: facturacion_documentos_relacionados.
+            var value = {
+                id: @Model.PK_codigo
+            }
+            //Hace la peticion AJAX para guardar registro.
+            $.ajax({
+                url: '/ClientesFacturacion/GenerarPDF',
+                type: "POST",
+                data: JSON.stringify(value),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success && result.pdfBase64) {
+                        var pdfData = atob(result.pdfBase64);
+                        var arrayBuffer = new Uint8Array(pdfData.length);
+                        for (var i = 0; i < pdfData.length; i++) {
+                            arrayBuffer[i] = pdfData.charCodeAt(i);
+                        }
+                        var blob = new Blob([arrayBuffer], { type: "application/pdf" });
+                        var url = URL.createObjectURL(blob);
+                        window.open(url, '_blank');
+
+                    } else {
+                        //console.error("PDF generation failed or no base64 string provided.");
+                    }
+                },
+                error: function (response) {
+
+                }
+            });
         }
 
         $("#txt_FK_bodega").select2({

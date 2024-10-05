@@ -9,6 +9,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ControlDeInventarios.entities;
+using QuestPDF.Infrastructure;
+using System.Globalization;
+using System.IO;
+using System.Reflection.Metadata;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Previewer;
+using Document = QuestPDF.Fluent.Document;
 
 namespace ControlDeInventarios.mvc.Controllers
 {
@@ -270,6 +278,61 @@ namespace ControlDeInventarios.mvc.Controllers
                 //Actualiza la vista.
                 return View();
             }
+        }
+
+        public ActionResult GenerarPDF(int id)
+        {
+            //Buscar registro.
+            var sucursal = db.vw_facturacion.Where(x => x.PK_codigo == id).FirstOrDefault();
+            var lista_resumen = db.vw_facturacion_detalle.Where(x => x.FK_factura == id).ToList();
+
+            //Inicializar.
+            QuestPDF.Settings.License = LicenseType.Community;
+
+            //Formato para números negativos.
+            NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+
+            var stream = new MemoryStream();
+            Document.Create(document =>
+            {
+                //Document creation here
+                document.Page(page =>
+                {
+                    page.Margin(70);
+
+                    //Encabezado del reporte
+                    page.Header().Row(row =>
+                    {
+                        row.Spacing(10);
+                        row.RelativeItem().AlignCenter().Column(col =>
+                        {
+                            //Tabla 1
+                            col.Item().PaddingTop(2).BorderColor("#D9D9D9").Table(tabla1 =>
+                            {
+                                tabla1.ColumnsDefinition(columns =>
+                                {
+                                    columns.RelativeColumn();
+                                });
+                                tabla1.Header(header =>
+                                {
+
+                                });
+                                tabla1.Cell().BorderColor("#D9D9D9")
+                                        .Padding(0).Text("PRUEBA DE USO DE QUESTPDF").Bold().AlignCenter().FontFamily("Figtree").FontSize(14);
+                            });
+                        });
+                    });
+
+                    //Cuerpo del reporte.
+                    page.Content().PaddingVertical(0).Column(col1 =>
+                    {
+                    });
+                });
+            }).GeneratePdf(stream);
+            stream.Position = 0;
+            var bytes = stream.ToArray();
+            var base64String = Convert.ToBase64String(bytes);
+            return Json(new { success = true, pdfBase64 = base64String });
         }
 
     }
