@@ -61,8 +61,8 @@
                     <a class="nav-link active" data-bs-toggle="tab" href="#Detalle">FACTURAS DE VENTA</a>
                 </li>
                 @*<li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab" href="#Facturas">CUENTAS CONTABLES</a>
-                </li>*@
+                        <a class="nav-link" data-bs-toggle="tab" href="#Facturas">CUENTAS CONTABLES</a>
+                    </li>*@
             </ul>
         </div>
         <div class="col-12">
@@ -104,31 +104,31 @@
                 </div>
                 <!-- Tab panes Cuentas Contables -->
                 @*<div class="tab-pane container fade" id="Facturas">
-                    <table class="table table-bordered" id="myTable_Cuentas">
-                        <thead>
-                            <tr>
-                                <th class="text-center" scope="col">N°</th>
-                                <th class="text-center" scope="col">Cuenta</th>
-                                <th class="text-center" scope="col">Concepto</th>
-                                <th class="text-center" scope="col">Cargo</th>
-                                <th class="text-center" scope="col">Abono</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var _b in _partidas)
-                            {
+                        <table class="table table-bordered" id="myTable_Cuentas">
+                            <thead>
                                 <tr>
-                                    <th class="text-center" scope="row"><a href="/ClientesAbonos/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
-                                    <td>@_b.cuen</td>
-                                    <td>@_b.concepto</td>
-                                    <td class="text-end">@_b.subtotal.ToString("C2")</td>
-                                    <td class="text-end">@_b.iva.ToString("C2")</td>
-                                    <td class="text-end">@_b.total.ToString("C2")</td>
+                                    <th class="text-center" scope="col">N°</th>
+                                    <th class="text-center" scope="col">Cuenta</th>
+                                    <th class="text-center" scope="col">Concepto</th>
+                                    <th class="text-center" scope="col">Cargo</th>
+                                    <th class="text-center" scope="col">Abono</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>*@
+                            </thead>
+                            <tbody>
+                                @foreach (var _b in _partidas)
+                                {
+                                    <tr>
+                                        <th class="text-center" scope="row"><a href="/ClientesAbonos/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
+                                        <td>@_b.cuen</td>
+                                        <td>@_b.concepto</td>
+                                        <td class="text-end">@_b.subtotal.ToString("C2")</td>
+                                        <td class="text-end">@_b.iva.ToString("C2")</td>
+                                        <td class="text-end">@_b.total.ToString("C2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>*@
             </div>
         </div>
     </div>
@@ -137,7 +137,10 @@
 @section botones{
     <a href="/ClientesAbonos/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Abonos</span></a>
     <a href="~/ClientesAbonos/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
-    <a href="~/ClientesAbonos/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    @if (Model.FK_estado == 1)
+    {
+        <a href="~/ClientesAbonos/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    }
     <div class="btn-group dropup">
         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-list"></i> Opciones

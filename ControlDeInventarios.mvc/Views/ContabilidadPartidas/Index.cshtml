@@ -12,6 +12,7 @@
         </div>
     </div>
 </div>
+
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -32,7 +33,7 @@
                         <tr>
                             <th class="text-center" scope="row"><a href="/ContabilidadPartidas/Details/@_partida.PK_codigo">@_partida.PK_codigo</a></th>
                             <td>@_partida.concepto</td>
-                            <td class="text-end">@_partida.fecha.ToString("dd-MM-yyyy")</td>
+                            <td class="text-end">@_partida.fecha.ToString("dd/MM/yyyy")</td>
                             <td class="text-end">@_partida.cargos.ToString("C2")</td>
                             <td class="text-end">@_partida.abonos.ToString("C2")</td>
                             <td>

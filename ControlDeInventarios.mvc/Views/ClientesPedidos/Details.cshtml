@@ -14,6 +14,7 @@
         </div>
     </div>
 </div>
+
 <div class="container">
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
@@ -116,18 +117,18 @@
                         <tbody>
                             @foreach (var _b in _facturas)
                             {
-                            <tr>
-                                <th class="text-center" scope="row"><a href="/ClientesFacturacion/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
-                                <td>@_b.fecha.ToString("dd/MM/yyyy")</td>
-                                <td>@_b.concepto</td>
-                                <td class="text-end">@_b.subtotal.ToString("C2")</td>
-                                <td class="text-end">@_b.iva.ToString("C2")</td>
-                                <td class="text-end">@_b.total.ToString("C2")</td>
-                                <td>
-                                    <label style="color:@_b.estado_color"><i class="fa fa-circle"></i></label>
-                                    <label>@_b.estado</label>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <th class="text-center" scope="row"><a href="/ClientesFacturacion/Details/@_b.PK_codigo">@_b.PK_codigo</a></th>
+                                    <td>@_b.fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>@_b.concepto</td>
+                                    <td class="text-end">@_b.subtotal.ToString("C2")</td>
+                                    <td class="text-end">@_b.iva.ToString("C2")</td>
+                                    <td class="text-end">@_b.total.ToString("C2")</td>
+                                    <td>
+                                        <label style="color:@_b.estado_color"><i class="fa fa-circle"></i></label>
+                                        <label>@_b.estado</label>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -140,7 +141,10 @@
 @section botones{
     <a href="/ClientesPedidos/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Pedidos</span></a>
     <a href="~/ClientesPedidos/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
-    <a href="~/ClientesPedidos/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    @if (Model.FK_estado == 1)
+    {
+        <a href="~/ClientesPedidos/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    }
     <div class="btn-group dropup">
         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-list"></i> Opciones

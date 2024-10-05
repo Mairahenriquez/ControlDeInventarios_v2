@@ -12,6 +12,7 @@
         </div>
     </div>
 </div>
+
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -33,7 +34,7 @@
                     {
                         <tr>
                             <th class="text-center" scope="row"><a href="/ClientesPedidos/Details/@_pedidos.PK_codigo">@_pedidos.PK_codigo</a></th>
-                            <td class="text-end">@_pedidos.fecha.ToString("dd-MM-yyyy")</td>
+                            <td class="text-end">@_pedidos.fecha.ToString("dd/MM/yyyy")</td>
                             <td>@_pedidos.referencia</td>
                             <td>@_pedidos.observaciones</td>
                             <td class="text-end">@_pedidos.subtotal.ToString("C2")</td>
