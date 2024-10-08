@@ -1,0 +1,101 @@
+﻿@model ControlDeInventarios.entities.tesoreria_cheques
+@{
+    ViewBag.Title = "Cuentas Bancarias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Cuenta Bancaria # @Model.PK_codigo</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<form class="modal-content needs-validation" method="post" novalidate>
+    <div class="row">
+        <input id="PK_codigo" name="PK_codigo" type="text" value="@Model.PK_codigo" class="form-control" hidden>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Nombre del Banco *</label>
+            <select id="FK_tesoreria_bancos" name="FK_tesoreria_bancos" class="form-control" required>
+                @foreach (var banco in ViewBag._bancos)
+                {
+                    if (banco.PK_codigo == Model.FK_proveedores_compras)
+                    {
+                        <option value="@banco.PK_codigo" selected>@banco.nombre</option>
+                    }
+                    else
+                    {
+                        <option value="@banco.PK_codigo">@banco.nombre</option>
+                    }
+                }
+                }
+            </select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Orden de Compra *</label>
+            <select id="FK_proveedores_compras" name="FK_proveedores_compras" class="form-control" required>
+                @foreach (var orden in ViewBag._orden_compra)
+                {
+                    if (orden.PK_codigo == Model.FK_proveedores_compras)
+                    {
+                        <option value="@orden.PK_codigo" selected>@orden.documento</option>
+                    } else {
+                        <option value="@orden.PK_codigo">@orden.documento</option>
+                    }
+                }
+            </select>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Monto * </label>
+            <input id="monto" name="monto" type="number" value="@Model.monto" step="0.01" class="form-control text-end" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha *</label>
+            <input id="fecha" name="fecha" type="date" value="@Model.fecha.ToString("yyyy-MM-dd")" class="form-control text-end" required>
+            <div class="invalid-feedback">Requerido</div>
+        </div>
+    </div>
+    <button type="submit" id="btnGuardar" class="btn btn-primary" hidden></button>
+</form>
+
+@section botones{
+    <a href="/TesoreriaCheques/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline"> Cuentas Bancarias</span></a>
+    <a href="~/TesoreriaCheques/Details/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fas fa-times"></i><span class="d-none d-sm-inline"> Cancelar</span></a>
+    <button type="button" onclick="javascript:Guardar();" class="btn btn-primary"><i class="fas fa-check"></i><span class="d-none d-sm-inline"> Guardar</span></button>
+}
+
+@section scripts{
+    <script>
+
+        //VALIDACION BOOTSTRAP
+        (() => {
+            'use strict';
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        $("#FK_tesoreria_cheques").select2({}).trigger();
+        $("#FK_proveedores_compras").select2({}).trigger();
+
+
+        function Guardar() {
+            $("#btnGuardar").trigger("click");
+        }
+
+    </script>
+}

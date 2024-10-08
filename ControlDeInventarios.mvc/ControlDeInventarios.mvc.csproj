@@ -489,6 +489,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\TesoreriaChequesController.cs" />
     <Compile Include="Controllers\Admin\UsuarioController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BitacorasController.cs" />
@@ -748,6 +749,10 @@
     <Content Include="Views\TesoreriaBancos\Details.cshtml" />
     <Content Include="Views\TesoreriaBancos\Create.cshtml" />
     <Content Include="Views\TesoreriaBancos\Edit.cshtml" />
+    <Content Include="Views\TesoreriaCheques\Create.cshtml" />
+    <Content Include="Views\TesoreriaCheques\Details.cshtml" />
+    <Content Include="Views\TesoreriaCheques\Edit.cshtml" />
+    <Content Include="Views\TesoreriaCheques\Index.cshtml" />
     <Content Include="Views\CXC\CorteCaja.cshtml" />
     <Content Include="Views\CXC\_GenerarCorte.cshtml" />
   </ItemGroup>

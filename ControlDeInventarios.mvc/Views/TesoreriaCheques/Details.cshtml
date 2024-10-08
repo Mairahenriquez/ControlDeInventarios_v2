@@ -1,0 +1,55 @@
+﻿@model ControlDeInventarios.entities.vw_tesoreria_cheques
+@{
+    ViewBag.Title = "Cuentas Bancarias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var _existencias = ViewBag._existencias;
+}
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Cheque # @Model.PK_codigo </h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Nombre de Banco:</label><br />
+            <label class="form-label bold">@Model.nombre</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Monto:</label><br />
+            <label class="form-label bold">@Model.monto.ToString("C2")</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Orden de compra:</label><br />
+            <label class="form-label bold">@Model.documento</label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+            <label class="form-label">Fecha: </label><br />
+            <label class="form-label bold">@Model.fecha</label>
+        </div>
+    </div>
+</div>
+
+@section botones{
+    <a href="/TesoreriaCheques/Index" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i><span class="d-none d-sm-inline">Cheques</span></a>
+    <a href="~/TesoreriaCheques/Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i><span class="d-none d-sm-inline"> Nuevo</span></a>
+    <a href="~/TesoreriaCheques/Edit/@Model.PK_codigo" class="btn btn-outline-primary"><i class="fa-solid fa-pen-to-square"></i><span class="d-none d-sm-inline"> Editar</span></a>
+    <div class="btn-group dropup">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Opciones
+        </button>
+    </div>
+}
+
+@section scripts{
+    <script>
+
+    
+    </script>
+}
+

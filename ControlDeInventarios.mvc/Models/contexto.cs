@@ -72,7 +72,8 @@ namespace ControlDeInventarios.mvc.Models
         public DbSet<devolucion_compra_detalle> devolucion_compra_detalles { get; set; }
 
         public DbSet<proveedores_compras_detalle> proveedores_compras_detalles { get; set; }
-
+        public DbSet<tesoreria_cheques> tesoreria_cheques { get; set; }
+        public DbSet<vw_tesoreria_cheques> vw_tesoreria_cheques { get; set; }
         public DbSet<devolucion_ventas> devolucion_ventas{ get; set; }
         public DbSet<devolucion_venta_detalle> devolucion_venta_detalle { get; set; }
         public DbSet<vw_devolucion_ventas> vw_devolucion_ventas { get; set; }
