@@ -81,6 +81,7 @@
     <Compile Include="proveedores_compras_detalles.cs" />
     <Compile Include="proveedores_ordenes_compras.cs" />
     <Compile Include="proveedores_ordenes_compras_detalle.cs" />
+    <Compile Include="tesoreria_cheques.cs" />
     <Compile Include="tesoreria_bancos.cs" />
     <Compile Include="usuarios.cs" />
     <Compile Include="proveedores.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="vw_proveedores_compras_detalle.cs" />
     <Compile Include="vw_proveedores_ordenes_compras.cs" />
     <Compile Include="vw_proveedores_ordenes_compras_detalle.cs" />
+    <Compile Include="vw_tesoreria_cheques.cs" />
     <Compile Include="vw_tesoreria_bancos.cs" />
     <Compile Include="vw_tesoreria_notas.cs" />
     <Compile Include="vw_tesoreria_notas_facturas.cs" />
