@@ -43,6 +43,10 @@
     </div>
 </div>
 
+@section botones{
+    <a href="#!" class="btn btn-outline-primary" onclick="GenerarReporteCorteCaja();"><i class="fa fa-file-pdf-o"></i> Generar PDF</a>
+}
+
 @section scripts{
     <script>
 
@@ -68,6 +72,49 @@
                 dataType: "html"
             }).done(function (r) {
                 $("#GenerarCorte").html(r);
+            });
+        }
+
+        function GenerarReporteCorteCaja() {
+            var fecha = document.getElementById("txtFecha").value;
+            if (fecha !== "") {
+                $('#div_fecha').text('');
+                getGenerar(fecha);
+            }
+            else {
+                $('#div_fecha').text('Requerido');
+            }
+        }
+
+        function getGenerar(fecha) {
+            //Crea el objeto: facturacion_documentos_relacionados.
+            var value = {
+                fecha: fecha
+            }
+            //Hace la peticion AJAX para guardar registro.
+            $.ajax({
+                url: '/CXC/GenerarReporteCorteCaja',
+                type: "POST",
+                data: JSON.stringify(value),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success && result.pdfBase64) {
+                        var pdfData = atob(result.pdfBase64);
+                        var arrayBuffer = new Uint8Array(pdfData.length);
+                        for (var i = 0; i < pdfData.length; i++) {
+                            arrayBuffer[i] = pdfData.charCodeAt(i);
+                        }
+                        var blob = new Blob([arrayBuffer], { type: "application/pdf" });
+                        var url = URL.createObjectURL(blob);
+                        window.open(url, '_blank');
+                    } else {
+                        //console.error("PDF generation failed or no base64 string provided.");
+                    }
+                },
+                error: function (response) {
+
+                }
             });
         }
 
