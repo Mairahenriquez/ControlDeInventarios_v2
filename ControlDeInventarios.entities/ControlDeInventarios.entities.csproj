@@ -81,6 +81,7 @@
     <Compile Include="proveedores_compras_detalles.cs" />
     <Compile Include="proveedores_ordenes_compras.cs" />
     <Compile Include="proveedores_ordenes_compras_detalle.cs" />
+    <Compile Include="reporte_corte_caja.cs" />
     <Compile Include="tesoreria_bancos.cs" />
     <Compile Include="usuarios.cs" />
     <Compile Include="proveedores.cs" />

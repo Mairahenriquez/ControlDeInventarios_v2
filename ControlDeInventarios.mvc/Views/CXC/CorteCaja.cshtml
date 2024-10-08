@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Corte de Caja";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    #div_fecha {
+        color: red;
+        font-size: 0.875em;
+    }
+</style>
+
+<div class="container">
+    <div class="row tema">
+        <div class="col-12 mt-4">
+            <h1 class="h3 mt-4 text-gray-800">Corte de Caja</h1>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-2 mb-2">
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-2 mb-2">
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-2 mb-2">
+            <label>Fecha </label><br />
+            <div class="input-group">
+                <input id="txtFecha" name="txtFecha" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-end" onchange="getFecha()" required />
+                <a class="btn btn-outline-secondary" type="button" href="#!" onclick="AbrirModalCorteCaja();"><i class="fas fa-search"></i> Buscar</a>
+            </div>
+            <div id="div_fecha"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div id="GenerarCorte">
+
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            //let table = new DataTable('#myTable');
+            new DataTable('#myTable', {
+                order: [[0, 'desc']],
+                responsive: true
+            });
+        });
+
+        //Carga la vista parcial.
+        function AbrirModalCorteCaja() {
+            var value = {
+                fecha: document.getElementById("txtFecha").value
+            }
+            //Carga la vista parcial.
+            $.ajax({
+                url: "../../CXC/_GenerarCorte",
+                data: JSON.stringify(value),
+                method: "POST",
+                contentType: "application/json",
+                dataType: "html"
+            }).done(function (r) {
+                $("#GenerarCorte").html(r);
+            });
+        }
+
+        function getFecha() {
+            $('#div_fecha').text('');
+        }
+
+        //Cargar inicialmente.
+        $(document).ready(function () {
+            //Recarga la grid.
+            AbrirModalCorteCaja();
+        });
+
+    </script>
+}
+
+

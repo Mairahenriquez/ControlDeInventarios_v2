@@ -1,0 +1,25 @@
+﻿@model IEnumerable<ControlDeInventarios.entities.reporte_corte_caja>
+
+<div class="row">
+    <div class="col-12">
+        <table class="table table-bordered" id="myTable">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">Tipo</th>
+                    <th class="text-center" scope="col">Forma de pago</th>
+                    <th class="text-center" scope="col">Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var _clientes in Model)
+                {
+                    <tr>
+                        <td>@_clientes.tipo</td>
+                        <td>@_clientes.forma_pago</td>
+                        <td class="text-end">@_clientes.total.ToString("C2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

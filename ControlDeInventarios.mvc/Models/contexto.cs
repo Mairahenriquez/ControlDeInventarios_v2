@@ -13,6 +13,7 @@ namespace ControlDeInventarios.mvc.Models
         {
 
         }
+        public DbSet<reporte_corte_caja> reporte_corte_caja { get; set; }
         public DbSet<vw_clientes_abonos> vw_clientes_abonos { get; set; }
         public DbSet<vw_clientes_abonos_facturas> vw_clientes_abonos_facturas { get; set; }
         public DbSet<tesoreria_bancos> tesoreria_bancos { get; set; }

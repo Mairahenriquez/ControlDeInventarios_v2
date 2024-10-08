@@ -499,6 +499,7 @@
     <Compile Include="Controllers\ClientesPedidosController.cs" />
     <Compile Include="Controllers\ContabilidadCuentasContablesController.cs" />
     <Compile Include="Controllers\ContabilidadPartidasController.cs" />
+    <Compile Include="Controllers\CXCController.cs" />
     <Compile Include="Controllers\DevolucionesComprasController.cs" />
     <Compile Include="Controllers\DevolucionesVentasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -747,6 +748,8 @@
     <Content Include="Views\TesoreriaBancos\Details.cshtml" />
     <Content Include="Views\TesoreriaBancos\Create.cshtml" />
     <Content Include="Views\TesoreriaBancos\Edit.cshtml" />
+    <Content Include="Views\CXC\CorteCaja.cshtml" />
+    <Content Include="Views\CXC\_GenerarCorte.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
