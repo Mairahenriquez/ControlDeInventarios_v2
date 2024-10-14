@@ -26,11 +26,11 @@ namespace ControlDeInventarios.mvc.Controllers
     {
         public int PK_codigo { get; set; }
         public string numero { get; set; }
-        public DateTime fecha_hora { get; set; }
+        public DateTime ?fecha_hora { get; set; }
         public decimal total { get; set; }
         public string observaciones { get; set; }
         public int anulada { get; set; }
-        public DateTime fecha_anulacion { get; set; }
+        public DateTime ?fecha_anulacion { get; set; }
         public string numero_factura { get; set; }
 
         public int id_factura { get; set; }
