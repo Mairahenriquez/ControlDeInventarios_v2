@@ -6,8 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Web.Mvc;
+using System.Data;
 
 namespace ControlDeInventarios.mvc.Controllers
 {
@@ -17,6 +19,8 @@ namespace ControlDeInventarios.mvc.Controllers
     public class DevolucionesVentasController : Controller
     {
         contexto db = new contexto();
+        BitacorasController bt = new BitacorasController();
+
         // GET: DevolucionesVentas
         public ActionResult Index()
         {
@@ -29,38 +33,61 @@ namespace ControlDeInventarios.mvc.Controllers
             if (Request.HttpMethod == "GET")
                 return View();
             
-            var pedido = db.clientes_pedidos.Where(x => x.PK_codigo == devolucionRequest.pedido).FirstOrDefault();
-            if (pedido == null)
-                return Json(new { success = false, error = "Venta no encontrada" }, JsonRequestBehavior.AllowGet);
+            try
+            {
+                var pedido = db.clientes_pedidos.Where(x => x.PK_codigo == devolucionRequest.pedido).FirstOrDefault();
+                if (pedido == null)
+                    return Json(new { success = false, error = "Venta no encontrada" }, JsonRequestBehavior.AllowGet);
             
-            var detalles = db.clientes_pedidos_detalle.Where(x => x.FK_pedido == devolucionRequest.pedido).ToList();
+                var detalles = db.clientes_pedidos_detalle.Where(x => x.FK_pedido == devolucionRequest.pedido).ToList();
 
-            if (detalles.Count == 0)
-                return Json(new { success = false, error = "Venta no tiene detalles" }, JsonRequestBehavior.AllowGet);
-           
-            using (var dbContextTransaction = db.Database.BeginTransaction()) {
+                if (detalles.Count == 0)
+                    return Json(new { success = false, error = "Venta no tiene detalles" }, JsonRequestBehavior.AllowGet);
 
-                var devolucion = new devolucion_ventas();
-                devolucion.FK_clientes_pedidos = devolucionRequest.pedido;
-                devolucion.fecha = DateTime.Now;
-                devolucion.observaciones = devolucionRequest.comentario;
-                db.devolucion_ventas.Add(devolucion);
-
-                db.SaveChanges();
-
-                foreach (var detalle in detalles)
+                //Validar que el modelo no sea null.
+                using (var dbContextTransaction = db.Database.BeginTransaction())
                 {
-                    var devolucionDetalle = new devolucion_venta_detalle();
-                    devolucionDetalle.FK_pedido_detalle = detalle.PK_codigo;
-                    devolucionDetalle.FK_devolucion_ventas = devolucion.PK_codigo;
-                    db.devolucion_venta_detalle.Add(devolucionDetalle);
+
+                    var devolucion = new devolucion_ventas();
+                    devolucion.FK_clientes_pedidos = devolucionRequest.pedido;
+                    devolucion.fecha = DateTime.Now;
+                    devolucion.observaciones = devolucionRequest.comentario;
+                    db.devolucion_ventas.Add(devolucion);
+
+                    db.SaveChanges();
+
+                    foreach (var detalle in detalles)
+                    {
+                        var devolucionDetalle = new devolucion_venta_detalle();
+                        devolucionDetalle.FK_pedido_detalle = detalle.PK_codigo;
+                        devolucionDetalle.FK_devolucion_ventas = devolucion.PK_codigo;
+                        db.devolucion_venta_detalle.Add(devolucionDetalle);
+                    }
+                    db.SaveChanges();
+
+                    //Ejecución de procedimiento.
+                    using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["Conexion"].ConnectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand("sp_clientes_devolucion_ventas", con))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@PK_codigo", SqlDbType.Int).Value = pedido.PK_codigo;
+
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    dbContextTransaction.Commit();
                 }
-                db.SaveChanges();
-
-                dbContextTransaction.Commit();
+                  
+                //Actualiza la vista.
+                return Json(new { success = true, message = "Devolución de Ventas creada correctamente", id = 0 });
             }
-
-            return Json(new { success = true, message = "Nota de débito creada correctamente", id = 0 });
+            catch (Exception e)
+            {
+                //Actualiza la página.
+                return new JsonResult { Data = new { result = 0, error = "No se puede procesar la devolución. " + e.Message} };
+            }
             
         }
 
