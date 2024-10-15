@@ -26,13 +26,12 @@ namespace ControlDeInventarios.mvc.Controllers
     {
         public int PK_codigo { get; set; }
         public string numero { get; set; }
-        public DateTime fecha_hora { get; set; }
+        public DateTime? fecha_hora { get; set; }
         public decimal total { get; set; }
         public string observaciones { get; set; }
         public int anulada { get; set; }
-        public DateTime fecha_anulacion { get; set; }
+        public DateTime? fecha_anulacion { get; set; }
         public string numero_factura { get; set; }
-
         public int id_factura { get; set; }
     }
     [AuthAttribute]
@@ -44,8 +43,7 @@ namespace ControlDeInventarios.mvc.Controllers
         {
             var sqlRaw = "select nota_debito.*,facturacion.numero as numero_factura,facturacion.PK_codigo as id_factura from nota_debito inner join facturacion on facturacion.PK_codigo = nota_debito.FK_facturacion";
             //resut without DBset
-            var sqlResult = db.Database.SqlQuery<NotaDebitoDTO>(sqlRaw).ToList();
-           
+            var sqlResult = db.Database.SqlQuery<NotaDebitoDTO>(sqlRaw).ToList();           
          
             return View(sqlResult);
         }
